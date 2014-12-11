@@ -38,6 +38,9 @@ BEWARE: The API will only work for CrossRef DOIs.
 \examples{
 \donttest{
 cr_licenses()
+}
+
+\dontrun{
 cr_licenses(query = 'elsevier')
 cr_licenses(filter = c(member=78))
 cr_licenses(filter = c(issn='2090-8091'))

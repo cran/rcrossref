@@ -44,8 +44,12 @@ BEWARE: The API will only work for CrossRef DOIs.
 \donttest{
 # Works funded by the NSF
 cr_works(query="NSF")
+
 # Works that include renear but not ontologies
 cr_works(query="renear+-ontologies")
+}
+
+\dontrun{
 # Filter
 cr_works(query="global state", filter=c(has_orcid=TRUE), limit=3)
 # Filter by multiple fields

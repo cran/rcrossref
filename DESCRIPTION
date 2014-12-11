@@ -5,9 +5,9 @@ Description: R client for various CrossRef APIs, including metadata search
     (including bibtex, citeproc-json, rdf-xml, etc.), convert DOIs to PMIDs,
     and vice versa, get citations for DOIs, and get links to full text of
     articles when available.
-Version: 0.2.0
+Version: 0.2.1
 License: MIT + file LICENSE
-Date: 2014-11-28
+Date: 2014-12-10
 Authors@R: c(person("Carl", "Boettiger", role = "aut"),
     person("Ted", "Hart", role = "aut"),
     person("Scott", "Chamberlain", role = c("aut", "cre"), email =
@@ -18,7 +18,7 @@ BugReports: https://github.com/ropensci/rcrossref/issues
 VignetteBuilder: knitr
 Imports: jsonlite, XML, httr, plyr, bibtex, dplyr
 Suggests: testthat, roxygen2 (>= 4.0.1), knitr
-Packaged: 2014-11-29 00:16:59 UTC; sacmac
+Packaged: 2014-12-11 01:49:52 UTC; sacmac
 Author: Carl Boettiger [aut],
   Ted Hart [aut],
   Scott Chamberlain [aut, cre],
@@ -26,4 +26,4 @@ Author: Carl Boettiger [aut],
 Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2014-11-29 08:01:05
+Date/Publication: 2014-12-11 08:02:22

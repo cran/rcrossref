@@ -22,7 +22,9 @@ Have to have at least three terms in each search query.
 # search with title, author, year, and journal
 cr_search_free(query = "Piwowar Sharing Detailed Research Data Is Associated with
 Increased Citation Rate PLOS one 2007")
+}
 
+\dontrun{
 cr_search_free(query="Renear 2012") # too few words, need at least 3
 
 cr_search_free(query=c("Renear 2012","Piwowar sharing data PLOS one")) # multiple queries

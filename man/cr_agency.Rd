@@ -22,6 +22,9 @@ BEWARE: The API will only work for CrossRef DOIs.
 \examples{
 \donttest{
 cr_agency(dois = '10.13039/100000001')
+}
+
+\dontrun{
 res <- cr_agency(dois = c('10.13039/100000001','10.13039/100000015'))
 res[['10.13039/100000015']]
 }

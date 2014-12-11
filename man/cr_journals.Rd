@@ -45,8 +45,11 @@ order, filter
 }
 \examples{
 \donttest{
-cr_journals()
 cr_journals(issn="2167-8359")
+}
+
+\dontrun{
+cr_journals()
 cr_journals(issn="2167-8359", works=TRUE)
 cr_journals(issn=c('1803-2427','2326-4225'))
 cr_journals(query="ecology")

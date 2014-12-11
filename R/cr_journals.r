@@ -12,9 +12,13 @@
 #' Note that some parameters are ignored unless \code{works=TRUE}: sample, sort, 
 #' order, filter
 #' @references \url{https://github.com/CrossRef/rest-api-doc/blob/master/rest_api.md}
-#' @examples \donttest{
-#' cr_journals()
+#' @examples 
+#' \donttest{
 #' cr_journals(issn="2167-8359")
+#' }
+#' 
+#' \dontrun{
+#' cr_journals()
 #' cr_journals(issn="2167-8359", works=TRUE)
 #' cr_journals(issn=c('1803-2427','2326-4225'))
 #' cr_journals(query="ecology")

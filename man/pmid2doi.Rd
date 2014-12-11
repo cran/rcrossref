@@ -20,16 +20,22 @@ Get a PMID from a DOI, and vice versa.
 }
 \examples{
 \donttest{
-# dois to pmids
+# get a pmid from a doi
 doi2pmid("10.1016/0006-2944(75)90147-7")
+}
+
+\dontrun{
+# More examples
+## dois to pmids
 doi2pmid("10.1016/0006-2944(75)90147-7", TRUE)
 doi2pmid(c("10.1016/0006-2944(75)90147-7","10.1186/gb-2008-9-5-r89"))
 
-# pmids to dois
+## pmids to dois
 pmid2doi(18507872)
 pmid2doi(18507872, TRUE)
 pmid2doi(c(1,2,3))
 
+## pass in curl options
 library('httr')
 pmid2doi(18507872, config=verbose())
 }
