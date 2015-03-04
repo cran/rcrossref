@@ -1,9 +1,10 @@
 cr_compact <- function(x) Filter(Negate(is.null), x)
 
 filter_handler <- function(x){
-  if(is.null(x)){ NULL } else {
+  if(is.null(x)) { 
+    NULL 
+  } else {
     nn <- names(x)
-#     nn <- match.arg(nn, filterchoices, TRUE)
     if(any(nn %in% others)){
       nn <- sapply(nn, function(x) {
         if(x %in% others){
@@ -20,11 +21,25 @@ filter_handler <- function(x){
     }
     newnn <- gsub("_", "-", nn)
     names(x) <- newnn
+    x <- sapply(x, asl)
     args <- list()
     for(i in seq_along(x)){
       args[[i]] <- paste(names(x[i]), unname(x[i]), sep = ":")
     }
     paste0(args, collapse = ",")
+  }
+}
+
+asl <- function(x) {
+  x <- tolower(x)
+  if(is.logical(x) || x == "true" || x == "false") {
+    if(x) {
+      return('true')
+    } else {
+      return('false')
+    }
+  } else {
+    return(x)
   }
 }
 
@@ -43,14 +58,43 @@ filterchoices <- c(
 cr_GET <- function(endpoint, args, todf=TRUE, ...)
 {
   url <- sprintf("http://api.crossref.org/%s", endpoint)
-  response <- GET(url, query = args, ...)
-  doi <- gsub("works/|/agency", "", endpoint)
-  if(!response$status_code < 300){
-    warning(sprintf("%s: %s %s", response$status_code, doi, response$headers$statusmessage), call. = FALSE)
-    list(message=NA)
+  if(length(args) == 0) {
+    res <- GET(url, ...)
   } else {
-    stopifnot(response$headers$`content-type` == "application/json;charset=UTF-8")
-    res <- content(response, as = "text")
+    res <- GET(url, query = args, ...)
+  }
+  doi <- gsub("works/|/agency|funders/", "", endpoint)
+  if(!res$status_code < 300){
+    warning(sprintf("%s: %s", res$status_code, get_err(res)), call. = FALSE)
+    list(message =  NA)
+  } else {
+    stopifnot(res$headers$`content-type` == "application/json;charset=UTF-8")
+    res <- content(res, as = "text")
     jsonlite::fromJSON(res, todf)
   }
+}
+
+get_err <- function(x) {
+  tmp <- content(x)
+  if(is(tmp, "list")) {
+    tmp$message[[1]]$message
+  } else {
+    if(is(tmp, "HTMLInternalDocument")) {
+      return("Server error - check your query - or api.crossref.org may be experiencing problems")
+    } else {
+      return(tmp)
+    }
+  }
+}
+
+col_classes <- function(d, colClasses) {
+  colClasses <- rep(colClasses, len=length(d))
+  d[] <- lapply(seq_along(d), function(i) switch(colClasses[i], 
+                                                 numeric=as.numeric(d[[i]]), 
+                                                 character=as.character(d[[i]]), 
+                                                 Date=as.Date(d[[i]], origin='1970-01-01'), 
+                                                 POSIXct=as.POSIXct(d[[i]], origin='1970-01-01'), 
+                                                 factor=as.factor(d[[i]]),
+                                                 as(d[[i]], colClasses[i]) ))
+  d
 }

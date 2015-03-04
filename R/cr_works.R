@@ -11,16 +11,13 @@
 #' @details BEWARE: The API will only work for CrossRef DOIs.
 #' @references \url{https://github.com/CrossRef/rest-api-doc/blob/master/rest_api.md}
 #' 
-#' @examples 
-#' \donttest{
+#' @examples \dontrun{
 #' # Works funded by the NSF
 #' cr_works(query="NSF")
 #' 
 #' # Works that include renear but not ontologies
 #' cr_works(query="renear+-ontologies")
-#' }
 #' 
-#' \dontrun{
 #' # Filter
 #' cr_works(query="global state", filter=c(has_orcid=TRUE), limit=3)
 #' # Filter by multiple fields
@@ -55,7 +52,7 @@
 `cr_works` <- function(dois = NULL, query = NULL, filter = NULL, offset = NULL,
   limit = NULL, sample = NULL, sort = NULL, order = NULL, facet=FALSE, .progress="none", ...)
 {
-  foo <- function(x){
+  foo <- function(x, ...){
     path <- if(!is.null(x)) sprintf("works/%s", x) else "works"
     filter <- filter_handler(filter)
     facet <- if(facet) "t" else NULL
@@ -65,14 +62,18 @@
   }
   
   if(length(dois) > 1){
-    res <- llply(dois, foo, .progress=.progress)
+    res <- llply(dois, foo, .progress=.progress, ...)
     res <- lapply(res, "[[", "message")
     res <- lapply(res, parse_works)
     df <- rbind_all(res)
-    df$dois <- dois
+    #exclude rows with empty DOI value until CrossRef API supports input validation
+    if(nrow(df[df$DOI == "",]) > 0)
+     warning("only data with valid CrossRef dois returned",  call. = FALSE)
+    df <- df[!df$DOI == "",]
+ #  df$dois <- dois
     list(meta=NULL, data=df, facets=NULL)
   } else { 
-    tmp <- foo(dois)
+    tmp <- foo(dois, ...)
     if(is.null(dois)){
       meta <- parse_meta(tmp)
       list(meta=meta, data=rbind_all(lapply(tmp$message$items, parse_works)), facets=parse_facets(tmp$message$facets))
@@ -102,18 +103,19 @@ convtime <- function(x){
 
 parse_facets <- function(x){
   tmp <- lapply(x, function(z) ldply(z$values))
-  if(length(tmp) == 0) NA else tmp
+  if(length(tmp) == 0) NULL else tmp
 }
 
 parse_works <- function(zzz){
   keys <- c('subtitle','issued','score','prefix','container-title','reference-count','deposited',
             'title','type','DOI','URL','source','publisher','indexed','member','page','ISBN',
-            'subject','author','issue','ISSN','volume')
+            'subject','author','issue','ISSN','volume','license')
   manip <- function(which="issued", y){
     res <- switch(which, 
-                  issued = list(paste0(unlist(y[[which]]$`date-parts`), collapse = "-")),
-                  deposited = list(paste0(unlist(y[[which]]$`date-parts`), collapse = "-")),
-                  indexed = list(paste0(unlist(y[[which]]$`date-parts`), collapse = "-")),
+                  license = list(parse_license(y[[which]])),
+                  issued = list(paste0(sprintf("%02d", unlist(y[[which]]$`date-parts`)), collapse = "-")),
+                  deposited = list(make_date(y[[which]]$`date-parts`)),
+                  indexed = list(make_date(y[[which]]$`date-parts`)),
                   subtitle = list(y[[which]]),
                   score = list(y[[which]]),
                   prefix = list(y[[which]]),
@@ -139,5 +141,16 @@ parse_works <- function(zzz){
       res
     }
   }
-  data.frame(as.list(unlist(lapply(keys, manip, y=zzz))), stringsAsFactors = FALSE)
+  if(all(is.na(zzz))) NULL else data.frame(as.list(unlist(lapply(keys, manip, y=zzz))), stringsAsFactors = FALSE)
 }
+
+parse_license <- function(x){
+  if(is.null(x)){
+    NULL
+  } else {
+    date <- make_date(x[[1]]$start$`date-parts`)
+    data.frame(date=date, x[[1]][!names(x[[1]]) == "start"], stringsAsFactors = FALSE)
+  }
+}
+
+make_date <- function(x) paste0(sprintf("%02d", unlist(x)), collapse="-")

@@ -15,12 +15,9 @@
 #' 		Crossref API service.
 #' @seealso \code{\link{cr_r}}, \code{\link{cr_citation}}, \code{\link{cr_search_free}}
 #' @author Scott Chamberlain \email{myrmecocystus@@gmail.com}
-#' @examples 
-#' \donttest{
+#' @examples \dontrun{
 #' cr_search(query = c("renear", "palmer"))
-#' }
-#'
-#' \dontrun{
+#' 
 #' # limit to 4 results
 #' cr_search(query = c("renear", "palmer"), rows = 4)
 #'
@@ -52,8 +49,8 @@
 #' cr_search(query = c("renear", "palmer"), rows = 40, config=progress())
 #' }
 
-`cr_search` <- function(query=NULL, doi = NULL, page = NULL, rows = NULL, sort = NULL, 
-  year = NULL, type = NULL, ...)
+`cr_search` <- function(query=NULL, doi=NULL, page=NULL, rows=NULL, sort=NULL, 
+  year=NULL, type=NULL, ...)
 {
   url <- "http://search.labs.crossref.org/dois"
   if(!is.null(doi)){ doi <- as.character(doi) } else {doi <- doi}
@@ -70,6 +67,11 @@ cr_search_GET <- function(url, x, page, rows, sort, year, type, ...){
   tt <- GET(url, query=args, ...)
   stop_for_status(tt)
   res <- content(tt, as = "text")
-  tmp <- fromJSON(res)
-  if(nrow(tmp) == 0) "no results" else tmp
+  tmp <- jsonlite::fromJSON(res)
+  if(NROW(tmp) == 0) NULL else col_classes(tmp, c("character","numeric","integer","character","character","character","numeric"))
+}
+
+asnum <- function(x){
+  tmp <- tryCatch(as.numeric(x), warning=function(w) w)
+  if(is(tmp, "simpleWarning")) x else tmp
 }

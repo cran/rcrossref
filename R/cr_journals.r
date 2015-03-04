@@ -12,12 +12,8 @@
 #' Note that some parameters are ignored unless \code{works=TRUE}: sample, sort, 
 #' order, filter
 #' @references \url{https://github.com/CrossRef/rest-api-doc/blob/master/rest_api.md}
-#' @examples 
-#' \donttest{
+#' @examples \dontrun{
 #' cr_journals(issn="2167-8359")
-#' }
-#' 
-#' \dontrun{
 #' cr_journals()
 #' cr_journals(issn="2167-8359", works=TRUE)
 #' cr_journals(issn=c('1803-2427','2326-4225'))
@@ -29,11 +25,16 @@
 #' cr_journals(issn='1803-2427', works=TRUE)
 #' cr_journals(issn='1803-2427', works=TRUE, sample=1)
 #' cr_journals(limit=2)
+#' 
+#' # fails, if you want works, you must give an ISSN
+#' cr_journals(query = "ecology", filter=c(has_full_text = TRUE), works = TRUE)
 #' }
 
 `cr_journals` <- function(issn = NULL, query = NULL, filter = NULL, offset = NULL,
   limit = NULL, sample = NULL, sort = NULL, order = NULL, works=FALSE, .progress="none", ...)
 {
+  if(works) if(is.null(issn)) stop("If `works=TRUE`, you must give a journal ISSN", call. = FALSE)
+  
   foo <- function(x){
     path <- if(!is.null(x)){
       if(works) sprintf("journals/%s/works", x) else sprintf("journals/%s", x)
@@ -49,7 +50,11 @@
     res <- lapply(res, "[[", "message")
     res <- lapply(res, parse_works)
     df <- rbind_all(res)
-    df$issn <- issn
+    #exclude rows with empty ISSN value until CrossRef API supports input validation
+    if(nrow(df[df$ISSN == "",]) > 0)
+      warning("only data with valid ISSN returned",  call. = FALSE)
+    df <- df[!df$ISSN == "",]
+#   df$issn <- issn
     df
   } else {
     tmp <- foo(issn)
@@ -82,5 +87,5 @@ parse_journal <- function(x){
              stringsAsFactors = FALSE)
 }
 
-paste_longer <- function(w) if(length(w) > 1) paste(w, collapse=", ") else w
+paste_longer <- function(w) if(length(w) > 1) paste(w, collapse=", ") else w[[1]]
 names2underscore <- function(w) t(sapply(w, function(z) gsub("-", "_", z), USE.NAMES = FALSE))
