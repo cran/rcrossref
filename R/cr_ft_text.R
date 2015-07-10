@@ -74,9 +74,8 @@
 #' cr_ft_text(links, 'xml')
 #'
 #' ## You can use cr_ft_xml, cr_ft_plain, and cr_ft_pdf to go directly to that format
-#' out <-
-#'  cr_works(filter = list(has_full_text = TRUE,
-#'    license_url="http://creativecommons.org/licenses/by/3.0/"))
+#' licenseurl <- "http://creativecommons.org/licenses/by/3.0/"
+#' out <- cr_works(filter = list(has_full_text = TRUE, license_url = licenseurl))
 #' (links <- cr_ft_links(out$data$DOI[10], "all"))
 #' cr_ft_xml(links)
 #' cr_ft_pdf(links)
@@ -103,7 +102,7 @@
 #' ### elsevier articles that are open access
 #' #### one license is for open access articles, but none with full text available
 #' # cr_works(filter=list(license_url="http://www.elsevier.com/open-access/userlicense/1.0/",
-#'                      has_full_text=TRUE))
+#' #                      has_full_text=TRUE))
 #' }
 
 cr_ft_text <- function(url, type='xml', path = "~/.crossref", overwrite = TRUE,
@@ -154,27 +153,30 @@ getTEXT <- function(x, type, ...){
 }
 
 getPDF <- function(url, path, overwrite, type, read, verbose, cache=FALSE, ...) {
-  if(!file.exists(path)) dir.create(path, showWarnings = FALSE, recursive = TRUE)
+  if (!file.exists(path)) dir.create(path, showWarnings = FALSE, recursive = TRUE)
 
   # pensoft special handling
-  if( grepl("pensoft", url[[1]]) ){
+  if ( grepl("pensoft", url[[1]]) ) {
     filepath <- file.path(path, paste0(sub("/", ".", attr(url, "doi")), ".pdf"))
   } else {
-    ff <- if( !grepl(type, basename(url)) ) paste0(basename(url), ".", type) else basename(url)
+    ff <- if ( !grepl(type, basename(url)) ) paste0(basename(url), ".", type) else basename(url)
     filepath <- file.path(path, ff)
   }
 
-  if(cache && file.exists(filepath)){
-    if( !file.exists(filepath) ) stop(sprintf("%s not found", filepath), call. = FALSE)
+  filepath <- path.expand(filepath)
+  if (cache && file.exists(filepath)) {
+    if ( !file.exists(filepath) ) {
+      stop( sprintf("%s not found", filepath), call. = FALSE)
+    }
   } else {
-    if(verbose) message("Downloading pdf...")
+    if (verbose) message("Downloading pdf...")
     res <- GET(url, accept("application/pdf"), write_disk(path = filepath, overwrite = overwrite), ...)
-    filepath <- res$request$writer[[1]]
+    filepath <- res$request$output$path
   }
 
-  if(read){
-    if(verbose) message("Exracting text from pdf...")
-    extract_xpdf(path=filepath, ...)
+  if (read) {
+    if (verbose) message("Exracting text from pdf...")
+    extract_xpdf(path = filepath, ...)
   } else {
     filepath
   }
