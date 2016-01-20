@@ -5,97 +5,174 @@
 #' @param dois Search by a single DOI or many DOIs.
 #' @template args
 #' @template moreargs
+#' @template cursor_args
+#' @param facet (logical) Include facet results. Default: \code{FALSE}
 #' @param works (logical) If TRUE, works returned as well, if not then not.
+#' @param parse (logical) Whether to output json \code{FALSE} or parse to 
+#' list \code{TRUE}. Default: \code{FALSE}
 #' 
 #' @details BEWARE: The API will only work for CrossRef DOIs.
+#' 
+#' This function name changing to \code{cr_funders} in the next version - both work for now
 #' @references \url{https://github.com/CrossRef/rest-api-doc/blob/master/rest_api.md}
 #' 
+#' @section NOTE:
+#' Funders without IDs don't show up on the /funders route, and in this 
+#' function. Some funders don't have assigned IDs in Crossref's system, 
+#' so won't show up in searches. 
+#' 
 #' @examples \dontrun{
-#' cr_fundref(query="NSF", limit=1)
-#' cr_fundref(query="NSF")
-#' cr_fundref(dois='10.13039/100000001')
-#' out <- cr_fundref(dois=c('10.13039/100000001','10.13039/100000015'))
+#' cr_funders(query="NSF", limit=1)
+#' cr_funders(query="NSF")
+#' cr_funders(dois='10.13039/100000001')
+#' out <- cr_funders(dois=c('10.13039/100000001','10.13039/100000015'))
 #' out['10.13039/100000001']
 #' out[['10.13039/100000001']]
 #' 
-#' cr_fundref(dois='10.13039/100000001')
-#' cr_fundref(dois='10.13039/100000001', works=TRUE, limit=5)
+#' cr_funders(dois='10.13039/100000001')
+#' cr_funders(dois='10.13039/100000001', works=TRUE, limit=5)
 #'
-#' cr_fundref(dois=c('10.13039/100000001','10.13039/100000015'))
-#' cr_fundref(dois=c('10.13039/100000001','10.13039/100000015'), works=TRUE)
+#' cr_funders(dois=c('10.13039/100000001','10.13039/100000015'))
+#' cr_funders(dois=c('10.13039/100000001','10.13039/100000015'), works=TRUE)
 #'
 #' # Curl options
 #' library('httr')
-#' cr_fundref(dois='10.13039/100000001', config=verbose())
+#' cr_funders(dois='10.13039/100000001', config=verbose())
 #' 
-#' # If not found, and only 1 DOI given, list of NA elements returned
-#' cr_fundref("adfadfaf")
 #' # If not found, and > 1 DOI given, those not found dropped
-#' cr_fundref(dois=c("adfadfaf","asfasf"))
-#' cr_fundref(dois=c("adfadfaf","asfasf"), works=TRUE)
-#' cr_fundref(dois=c("10.13039/100000001","asfasf"))
-#' cr_fundref(dois=c("10.13039/100000001","asfasf"), works=TRUE)
+#' cr_funders(dois=c("adfadfaf","asfasf"))
+#' cr_funders(dois=c("adfadfaf","asfasf"), works=TRUE)
+#' cr_funders(dois=c("10.13039/100000001","asfasf"))
+#' cr_funders(dois=c("10.13039/100000001","asfasf"), works=TRUE)
+#'
+#' # Use the cursor for deep paging
+#' cr_funders('100000001', works = TRUE, cursor = "*", cursor_max = 500, limit = 100)
+#' cr_funders(c('100000001', '100000002'), works = TRUE, cursor = "*",
+#'    cursor_max = 300, limit = 100) 
+#'    
+#' # Low level function - does no parsing to data.frame, get json or a list
+#' cr_funders_(query = 'nsf')
+#' cr_funders_('10.13039/100000001')
+#' cr_funders_(query = 'science', parse=TRUE)
+#' cr_funders_('10.13039/100000001', works = TRUE, cursor = "*", 
+#'    cursor_max = 300, limit = 100)
+#' cr_funders_('10.13039/100000001', works = TRUE, cursor = "*", 
+#'    cursor_max = 300, limit = 100, parse = TRUE)
 #' }
-
 `cr_fundref` <- function(dois = NULL, query = NULL, filter = NULL, offset = NULL,
-  limit = NULL,  sample = NULL, sort = NULL, order = NULL, works = FALSE, 
-  .progress="none", ...)
-{
-  filter <- filter_handler(filter)
-  args <- cr_compact(list(query = query, filter = filter, offset = offset, rows = limit,
-                          sample = sample, sort = sort, order = order))
+  limit = NULL,  sample = NULL, sort = NULL, order = NULL, facet=FALSE, works = FALSE, 
+  cursor = NULL, cursor_max = 5000, .progress="none", ...) {
   
-  if(length(dois) > 1){
-    res <- llply(dois, fundref_GET, args=args, works=works, ..., .progress=.progress)
-    out <- setNames(lapply(res, "[[", "message"), dois)
-    if( any(is.na(out)) ){
-      out <- cr_compact(lapply(out, function(x){
-        if( all(is.na(x)) ) NULL else x
-      }))
-    }
-    if(length(out) == 0){
-      NA
+  .Deprecated(msg = "function name changing to cr_funders in the next version\nboth work for now")
+  args <- prep_args(query, filter, offset, limit, sample, sort, order, facet, cursor)
+  if (length(dois) > 1) {
+    res <- llply(dois, fundref_GET, args = args, works = works, 
+                 cursor = cursor, cursor_max = cursor_max, ..., .progress = .progress)
+    if (!is.null(cursor)) {
+      out <- lapply(res, "[[", "data")
+      bind_rows(out)
     } else {
-      if(works){
-        tmp <- lapply(out, function(x) lapply(x$items, parse_works))
-        tmp <- tmp[!sapply(tmp, length) == 0]
-        rbind_all(do.call(c, tmp))
-      } else { 
-        lapply(out, parse_fund)
+      out <- setNames(lapply(res, "[[", "message"), dois)
+      if (any(is.na(out))) {
+        out <- cr_compact(lapply(out, function(x) {
+          if (all(is.na(x))) NULL else x
+        }))
+      }
+      if (length(out) == 0) {
+        NA
+      } else {
+        if (works) {
+          tmp <- lapply(out, function(x) lapply(x$items, parse_works))
+          tmp <- tmp[!sapply(tmp, length) == 0]
+          rbind_all(do.call(c, tmp))
+        } else { 
+          lapply(out, parse_fund)
+        }
       }
     }
   } else { 
-    res <- fundref_GET(dois, args=args, works=works, ...) 
-    if( all(is.na(res)) ){
-      list(meta=NA, data=NA)
+    res <- fundref_GET(dois, args = args, works = works, cursor = cursor, 
+                       cursor_max = cursor_max, ...) 
+    if (!is.null(cursor)) {
+      res
     } else {
-      if(is.null(dois)){
-        list(meta=parse_meta(res), 
-             data=rbind_all(lapply(res$message$items, parse_fundref)))
+      if (all(is.na(res))) {
+        list(meta = NA, data = NA)
       } else {
-        if(works){
-          wout <- rbind_all(lapply(res$message$items, parse_works))
-          meta <- parse_meta(res)
+        if (is.null(dois)) {
+          list(meta = parse_meta(res), 
+               data = rbind_all(lapply(res$message$items, parse_fundref)))
         } else {
-          wout <- parse_fund(res$message)
-          meta <- NULL
+          if (works) {
+            wout <- rbind_all(lapply(res$message$items, parse_works))
+            meta <- parse_meta(res)
+          } else {
+            wout <- parse_fund(res$message)
+            meta <- NULL
+          }
+          list(meta = meta, data = wout)
         }
-        list(meta=meta, data=wout)
       }
     }
   }
 }
 
-fundref_GET <- function(x, args, works, ...){
-  path <- if(!is.null(x)){
-    if(works) sprintf("funders/%s/works", x) else sprintf("funders/%s", x)
-  } else { "funders" }
-  cr_GET(path, args, todf = FALSE, ...)
+#' @export
+#' @rdname cr_fundref
+`cr_funders` <- `cr_fundref`
+
+#' @export
+#' @rdname cr_fundref
+`cr_funders_` <- function(dois = NULL, query = NULL, filter = NULL, offset = NULL,
+  limit = NULL,  sample = NULL, sort = NULL, order = NULL, facet=FALSE, works = FALSE, 
+  cursor = NULL, cursor_max = 5000, .progress="none", parse=FALSE, ...) {
+  
+  args <- prep_args(query, filter, offset, limit, sample, sort, order, facet, cursor)
+  if (length(dois) > 1) {
+    llply(dois, fundref_GET_, args = args, works = works, 
+          cursor = cursor, cursor_max = cursor_max, parse = parse, ..., .progress = .progress)
+  } else { 
+    fundref_GET_(dois, args = args, works = works, cursor = cursor, 
+                cursor_max = cursor_max, parse = parse, ...)
+  }
+}
+
+fundref_GET <- function(x, args, works, cursor = NULL, cursor_max = NULL, ...){
+  path <- if (!is.null(x)) {
+    if (works) sprintf("funders/%s/works", x) else sprintf("funders/%s", x)
+  } else { 
+    "funders" 
+  }
+  
+  if (!is.null(cursor) && works) {
+    rr <- Requestor$new(path = path, args = args, cursor_max = cursor_max, 
+                        should_parse = TRUE, ...)
+    rr$GETcursor()
+    rr$parse()
+  } else {
+    cr_GET(path, args, todf = FALSE, ...)
+  }
+}
+
+fundref_GET_ <- function(x, args, works, cursor = NULL, cursor_max = NULL, parse, ...){
+  path <- if (!is.null(x)) {
+    if (works) sprintf("funders/%s/works", x) else sprintf("funders/%s", x)
+  } else { 
+    "funders" 
+  }
+  
+  if (!is.null(cursor) && works) {
+    rr <- Requestor$new(path = path, args = args, cursor_max = cursor_max, 
+                        should_parse = parse, ...)
+    rr$GETcursor()
+    rr$cursor_out
+  } else {
+    cr_GET(path, args, todf = FALSE, parse = parse, ...)
+  }
 }
 
 parse_fund <- function(x){
   desc <- unlist(x$descendants)
-#   unlist(x$hierarchy)
   hier <- data.frame(id=names(unlist(x$`hierarchy-names`)), 
              name=unname(unlist(x$`hierarchy-names`)), stringsAsFactors = FALSE)
   df <- data.frame(name=x$name, location=x$location, work_count=x$`work-count`, 
