@@ -8,8 +8,8 @@
 #' project \url{http://tdmsupport.crossref.org/}.
 #' 
 #' @section Deprecated and Defunct:
-#' Note that functions that use the OpenURL service are now deprecated, and will be defunct 
-#' soon.
+#' See \code{\link{rcrossref-deprecated}} and \code{\link{rcrossref-defunct}} for 
+#' details.
 #' 
 #' @section What am I actually searching?:
 #' When you use the \code{cr_*()} functions in this package, you are using the Crossref 
@@ -39,15 +39,15 @@
 #' therefore less prone to potential errors due to changes in the Crossref API that
 #' could cause parsing errors. Note that cursor feature works with both high and low level.
 #'
-#' @importFrom utils modifyList
+#' @importFrom utils modifyList packageVersion
 #' @importFrom methods is as
 #' @importFrom stats setNames
 #' @importFrom dplyr rbind_all bind_rows tbl_df
 #' @importFrom R6 R6Class
-#' @importFrom XML xmlParse xpathSApply xmlAttrs
+#' @importFrom xml2 read_xml xml_attr xml_find_all
 #' @importFrom bibtex read.bib
 #' @importFrom httr GET POST stop_for_status content_type_json accept_json content
-#' write_disk accept http_status parse_url add_headers config
+#' write_disk accept http_status parse_url add_headers config user_agent
 #' @importFrom jsonlite toJSON fromJSON
 #' @importFrom plyr rbind.fill llply ldply
 #' @name rcrossref-package

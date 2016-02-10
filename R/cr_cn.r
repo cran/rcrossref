@@ -129,12 +129,15 @@
            "onix-xml" = "application/vnd.medra.onixdoi+xml")
     type <- pick[[format]]
     if (format == "citeproc-json") {
-      response <- GET(file.path("http://api.crossref.org/works", doi, type), ...)
+      response <- GET(file.path("http://api.crossref.org/works", doi, type), 
+                      make_rcrossref_ua(), ...)
     } else {
       if (format == "text") {
         type <- paste(type, "; style = ", style, "; locale = ", locale, sep = "")
       }
-      response <- GET(url, ..., add_headers(Accept = type, followlocation = TRUE))
+      response <- GET(url, ..., 
+                      make_rcrossref_ua(),
+                      add_headers(Accept = type, followlocation = TRUE))
     }
     warn_status(response)
     if (response$status_code < 202) {
@@ -153,14 +156,20 @@
         "onix-xml" = "text/xml")
       parser <- select[[format]]
       if (raw) {
-        content(response, "text")
+        ct_utf8(response)
       } else {
-        out <- content(response, "parsed", parser, "UTF-8")
+        out <- ct_utf8(response)
         if (format == "text") {
           out <- gsub("\n", "", out)
         }
         if (format == "bibentry") {
           out <- parse_bibtex(out)
+        }
+        if (parser == "application/json") {
+          out <- jsonlite::fromJSON(out)
+        }
+        if (parser == "text/xml") {
+          out <- xml2::read_xml(out)
         }
         out
       }
@@ -191,7 +200,7 @@ parse_bibtex <- function(x){
 
 warn_status <- function(x) {
   if (x$status_code > 202) {
-    mssg <- content(x)
+    mssg <- ct_utf8(x)
     if (!is.character(mssg)) {
       mssg <- if (x$status_code == 406) {
         "(406) - probably bad format type"

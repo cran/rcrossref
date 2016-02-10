@@ -67,16 +67,15 @@
       list(data = df, facets = facets)
     } else {
       out <- lapply(res, "[[", "message")
-      if ( all(is.na(out)) ) {
+      if (all(vapply(out, is.null, logical(1)))) {
         list(meta = NULL, data = NULL, facets = NULL)
       } else {
         # remove any slots not found
-        res <- res[!is.na(out)]
-        member_ids <- member_ids[!is.na(out)]
-        out <- out[!is.na(out)]
-        # continue...
-        out <- if (works) do.call("c", lapply(out, function(x) lapply(x$items, parse_works))) else lapply(out, parse_members)
-        df <- rbind_all(out)
+        member_ids <- member_ids[which(vapply(res, function(z) !is.null(z$message), logical(1)))]
+        res <- Filter(function(z) !is.null(z$message), res)
+        out <- cr_compact(out)
+        outdat <- if (works) do.call("c", lapply(out, function(x) lapply(x$items, parse_works))) else lapply(out, parse_members)
+        df <- rbind_all(outdat)
         meta <- if (works) data.frame(member_ids = member_ids, do.call(rbind, lapply(res, parse_meta)), stringsAsFactors = FALSE) else NULL
         facets <- setNames(lapply(res, function(x) parse_facets(x$message$facets)), member_ids)
         facets <- if (all(vapply(facets, is.null, logical(1)))) NULL else facets
@@ -89,7 +88,7 @@
     if (!is.null(cursor)) {
       tmp
     } else {
-      if (all(is.na(tmp$message))) {
+      if (is.null(tmp$message)) {
         list(meta = NULL, data = NULL, facets = NULL)
       } else {
         out <- if (works) rbind_all(lapply(tmp$message$items, parse_works)) else parse_members(tmp$message)
@@ -99,7 +98,7 @@
     }
   } else {
     tmp <- member_GET(NULL, args = args, works = works, ...)
-    if (all(is.na(tmp$message))) {
+    if (is.null(tmp$message)) {
       list(meta = NULL, data = NULL, facets = NULL)
     } else {
       df <- rbind_all(lapply(tmp$message$items, parse_members))
@@ -138,7 +137,7 @@ member_GET <- function(x, args, works, cursor = NULL, cursor_max = NULL, ...){
     rr$GETcursor()
     rr$parse()
   } else {
-    cr_GET(path, args, FALSE, parse = TRUE, ...)
+    cr_GET(endpoint = path, args, FALSE, parse = TRUE, ...)
   }
 }
 

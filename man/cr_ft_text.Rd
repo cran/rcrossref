@@ -67,6 +67,7 @@ cr_ft_links(doi = "10.5555/515151", "pdf")
 # xml and plain text links
 out <- cr_works(filter=c(has_full_text = TRUE))
 dois <- out$data$DOI
+cr_ft_links(dois[1], "pdf")
 cr_ft_links(dois[2], "xml")
 cr_ft_links(dois[1], "plain")
 cr_ft_links(dois[1], "all")
@@ -150,10 +151,10 @@ dois <- out$data$DOI[1:10]
 # }
 # res
 
-#### older dates 
-out <- cr_members(311, filter=c(has_full_text = TRUE, 
+#### older dates
+out <- cr_members(311, filter=c(has_full_text = TRUE,
       type = 'journal-article', until_created_date = "2013-12-31"), works = TRUE)
-     
+
 dois <- out$data$DOI[1:10]
 # res <- list()
 # for (i in seq_along(dois)) {

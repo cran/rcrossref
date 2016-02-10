@@ -17,7 +17,7 @@
 #' @author Scott Chamberlain \email{myrmecocystus@@gmail.com}
 #' @examples \dontrun{
 #' cr_search(query = c("renear", "palmer"))
-#' 
+#'
 #' # limit to 4 results
 #' cr_search(query = c("renear", "palmer"), rows = 4)
 #'
@@ -37,41 +37,46 @@
 #' cr_search(doi = "10.1890/10-0340.1")
 #'
 #' # search for many DOI's
-#' cr_search(doi = c("10.1890/10-0340.1","10.1016/j.fbr.2012.01.001",
-#'                   "10.1111/j.1469-8137.2012.04121.x"))
-#'
 #' # find all the records of articles from a journal ISBN
 #' cr_search(query = "1461-0248", type="Journal Article")
-#' 
+#'
 #' # curl stuff
 #' library('httr')
 #' cr_search(doi = "10.1890/10-0340.1", config=verbose())
 #' cr_search(query = c("renear", "palmer"), rows = 40, config=progress())
 #' }
 
-`cr_search` <- function(query=NULL, doi=NULL, page=NULL, rows=NULL, sort=NULL, 
-  year=NULL, type=NULL, ...)
-{
-  url <- "http://search.labs.crossref.org/dois"
-  if(!is.null(doi)){ doi <- as.character(doi) } else {doi <- doi}
-  if(is.null(doi)){
+`cr_search` <- function(query=NULL, doi=NULL, page=NULL, rows=NULL, sort=NULL,
+  year=NULL, type=NULL, ...) {
+  
+  .Deprecated(package = "rcrossref",
+              msg = "cr_search is deprecated, and will be removed in next version, see cr_works et al.")
+  #url <- "http://search.labs.crossref.org/dois"
+  url <- "http://search.crossref.org/dois"
+  if (!is.null(doi)) {
+    doi <- as.character(doi)
+  }
+  if (is.null(doi)) {
     cr_search_GET(url, query, page, rows, sort, year, type, ...)
-  } else
-  {
-    ldply(doi, function(z) cr_search_GET(url, x=z, page, rows, sort, year, type, ...))
+  } else {
+    ldply(doi, function(z) cr_search_GET(url, x = z, page, rows, sort, year, type, ...))
   }
 }
 
 cr_search_GET <- function(url, x, page, rows, sort, year, type, ...){
-  args <- cr_compact(list(q=x, page=page, rows=rows, sort=sort, year=year, type=type))
-  tt <- GET(url, query=args, ...)
+  if (!is.null(x)) {
+    if (length(x) > 1) x <- paste0(x, collapse = " ")
+  }
+  args <- cr_compact(list(q = x, page = page, rows = rows,
+                          sort = sort, year = year, type = type))
+  tt <- GET(url, query = args, make_rcrossref_ua(), ...)
   stop_for_status(tt)
-  res <- content(tt, as = "text")
+  res <- ct_utf8(tt)
   tmp <- jsonlite::fromJSON(res)
-  if(NROW(tmp) == 0) NULL else col_classes(tmp, c("character","numeric","integer","character","character","character","numeric"))
+  if (NROW(tmp) == 0) NULL else col_classes(tmp, c("character","numeric","integer","character","character","character","numeric"))
 }
 
 asnum <- function(x){
-  tmp <- tryCatch(as.numeric(x), warning=function(w) w)
-  if(is(tmp, "simpleWarning")) x else tmp
+  tmp <- tryCatch(as.numeric(x), warning = function(w) w)
+  if (is(tmp, "simpleWarning")) x else tmp
 }
