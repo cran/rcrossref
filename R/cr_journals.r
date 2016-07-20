@@ -1,4 +1,4 @@
-#' Search CrossRef journals
+1#' Search CrossRef journals
 #'
 #' @export
 #'
@@ -60,13 +60,13 @@
                  cursor = cursor, cursor_max = cursor_max, ..., .progress = .progress)
     if (!is.null(cursor)) {
       out <- lapply(res, "[[", "data")
-      bind_rows(out)
+      tbl_df(bind_rows(out))
     } else {
       res <- lapply(res, "[[", "message")
       # remove NULLs
       res <- cr_compact(res)
       res <- lapply(res, parse_works)
-      df <- rbind_all(res)
+      df <- tbl_df(bind_rows(res))
       #exclude rows with empty ISSN value until CrossRef API supports input validation
       if (nrow(df[df$ISSN == "", ]) > 0) {
         warning("only data with valid ISSN returned",  call. = FALSE)
@@ -82,16 +82,15 @@
       if (!is.null(issn)) {
         if (works) {
           meta <- parse_meta(tmp)
-          dat <- rbind_all(lapply(tmp$message$items, parse_works))
+          dat <- tbl_df(bind_rows(lapply(tmp$message$items, parse_works)))
         } else {
-          meta <- NULL
           dat <- if (is.null(tmp$message)) NULL else parse_journal(tmp$message)
         }
-        list(meta = meta, data = dat)
+        list(meta = NULL, data = dat)
       } else {
         fxn <- if (works) parse_works else parse_journal
         meta <- parse_meta(tmp)
-        list(meta = meta, data = rbind_all(lapply(tmp$message$items, fxn)))
+        list(meta = meta, data = tbl_df(bind_rows(lapply(tmp$message$items, fxn))))
       }
     }
   }
@@ -160,5 +159,9 @@ parse_journal <- function(x){
              stringsAsFactors = FALSE)
 }
 
-paste_longer <- function(w) if (length(w) > 1) paste(w, collapse = ", ") else w[[1]]
+paste_longer <- function(w) {
+  w <- if (length(w) > 1) paste(w, collapse = ", ") else w[[1]]
+  if (is.null(w)) NA else w
+}
+
 names2underscore <- function(w) t(sapply(w, function(z) gsub("-", "_", z), USE.NAMES = FALSE))

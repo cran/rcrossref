@@ -206,7 +206,8 @@ cr_auth <- function(url, type) {
     switch(mem_num,
         `78` = {
           key <- Sys.getenv("CROSSREF_TDM_ELSEVIER")
-          add_headers(`X-ELS-APIKey` = key, Accept = type)
+          #add_headers(`X-ELS-APIKey` = key, Accept = type)
+          add_headers(`CR-Clickthrough-Client-Token` = key, Accept = type)
         },
         `263` = {
           key <- Sys.getenv("CROSSREF_TDM")
@@ -260,7 +261,14 @@ getPDF <- function(url, path, auth, overwrite, type, read, verbose, cache=FALSE,
                write_disk(path = filepath, overwrite = overwrite),
                auth,
                config(followlocation = TRUE), ...)
-    filepath <- res$request$output$path
+    httr::warn_for_status(res)
+    if (res$status_code < 202) {
+      filepath <- res$request$output$path
+    } else {
+      unlink(filepath)
+      filepath <- res$status_code
+      read <- FALSE
+    }
   }
 
   if (read) {
