@@ -39,7 +39,8 @@ See \url{http://www.crosscite.org/cn/} for more info on the Crossref
   Content Negotiation API service.
   
   DataCite DOIs: Some values of the \code{format} parameter won't work with 
-  DataCite DOIs, i.e. "citeproc-json", "crossref-xml", "crossref-tdm", "onix-xml". 
+  DataCite DOIs, i.e. "citeproc-json", "crossref-xml", "crossref-tdm", 
+    "onix-xml". 
   
   MEDRA DOIs only work with "rdf-xml", "turtle", "citeproc-json-ish", "ris", 
   "bibtex", "bibentry", "onix-xml".
@@ -113,6 +114,11 @@ cr_cn("10.3233/ISU-150780", "onix-xml")
 
 # Get raw output
 cr_cn(dois = "10.1002/app.27716", format = "citeproc-json", raw = TRUE)
+
+# sometimes messy DOIs even work
+## in this case, a DOI minting agency can't be found
+## but we proceed anyway, just assuming it's "crossref"
+cr_cn("10.1890/0012-9615(1999)069[0569:EDILSA]2.0.CO;2")
 }
 }
 
