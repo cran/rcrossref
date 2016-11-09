@@ -8,12 +8,12 @@
 cr_works(dois = NULL, query = NULL, filter = NULL, offset = NULL,
   limit = NULL, sample = NULL, sort = NULL, order = NULL,
   facet = FALSE, cursor = NULL, cursor_max = 5000, .progress = "none",
-  ...)
+  flq = NULL, ...)
 
 cr_works_(dois = NULL, query = NULL, filter = NULL, offset = NULL,
   limit = NULL, sample = NULL, sort = NULL, order = NULL,
   facet = FALSE, cursor = NULL, cursor_max = 5000, .progress = "none",
-  parse = FALSE, ...)
+  parse = FALSE, flq = NULL, ...)
 }
 \arguments{
 \item{dois}{Search by a single DOI or many DOIs.}
@@ -22,16 +22,19 @@ cr_works_(dois = NULL, query = NULL, filter = NULL, offset = NULL,
 
 \item{filter}{Filter options. See details.}
 
-\item{offset}{Number of record to start at, from 1 to infinity.}
+\item{offset}{Number of record to start at. Minimum: 1. For
+\code{\link{cr_works}}, and any function setting \code{works = TRUE},
+the maximum offset value is 10000. For larger requests use \code{cursor}.}
 
-\item{limit}{Number of results to return in the query. Not relavant when searching with specific
-dois. Default: 20. Max: 1000}
+\item{limit}{Number of results to return in the query. Not relavant when
+searching with specific dois. Default: 20. Max: 1000}
 
-\item{sample}{(integer) Number of random results to return. when you use the sample parameter, 
-the rows and offset parameters are ignored. Ignored unless \code{works=TRUE}}
+\item{sample}{(integer) Number of random results to return. when you use
+the sample parameter, the rows and offset parameters are ignored.
+Ignored unless \code{works=TRUE}. Max: 100}
 
-\item{sort}{(character) Field to sort on, one of score, relevance, updated, deposited, indexed, 
-or published.}
+\item{sort}{(character) Field to sort on, one of score, relevance, updated,
+deposited, indexed, or published.}
 
 \item{order}{(character) Sort order, one of 'asc' or 'desc'}
 
@@ -52,6 +55,19 @@ found than this value, you will get only those found.}
 "tk", "win", and "time".  See \code{\link[plyr]{create_progress_bar}} for details 
 of each. Only used when passing in multiple ids (e.g., multiple DOIs, DOI prefixes,
 etc.)}
+
+\item{flq}{field queries. One or more field queries. Acceptable set of 
+field query parameters are: 
+\itemize{
+ \item query.title    - Query title and subtitle
+ \item query.container-title    - Query container-title aka. publication name
+ \item query.author - Query author first and given names
+ \item query.editor - Query editor first and given names
+ \item query.chair    - Query chair first and given names
+ \item query.translator - Query translator first and given names
+ \item query.contributor    - Query author, editor, chair and translator 
+ first and given names
+}}
 
 \item{...}{Named parameters passed on to \code{\link[httr]{GET}}}
 
@@ -91,6 +107,10 @@ cr_works(filter=c(has_orcid=TRUE, from_pub_date='2004-04-04'))
 cr_works(filter=c(has_full_text = TRUE))
 # has affilitation data
 cr_works(filter=c(has_affiliation = TRUE))
+# has abstract
+cr_works(filter=c(has_abstract = TRUE))
+# has clinical trial number
+cr_works(filter=c(has_clinical_trial_number = TRUE))
 
 # Querying dois
 cr_works(dois='10.1063/1.3593378')
@@ -132,6 +152,18 @@ cr_works_(query = "NSF", parse=TRUE)
 cr_works_(query="NSF", cursor = "*", cursor_max = 300, limit = 100)
 cr_works_(query="NSF", cursor = "*", cursor_max = 300, limit = 100, 
    parse=TRUE)
+   
+# field queries
+## query.author
+res <- cr_works(query = "ecology", flq = c(query.author = 'Boettiger'))
+
+## query.container-title
+res <- cr_works(query = "ecology", 
+  flq = c(`query.container-title` = 'Ecology'))
+
+## query.author and query.title
+res <- cr_works(query = "ecology", 
+  flq = c(query.author = 'Smith', query.title = 'cell'))
 }
 }
 \references{

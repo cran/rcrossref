@@ -7,16 +7,16 @@
 \alias{cr_ft_xml}
 \title{Get full text from a DOI}
 \usage{
-cr_ft_text(url, type = "xml", path = "~/.crossref", overwrite = TRUE,
+cr_ft_text(url, type = "xml", path = cr_cache_path(), overwrite = TRUE,
   read = TRUE, verbose = TRUE, cache = TRUE, ...)
 
-cr_ft_plain(url, path = "~/.crossref", overwrite = TRUE, read = TRUE,
+cr_ft_plain(url, path = cr_cache_path(), overwrite = TRUE, read = TRUE,
   verbose = TRUE, ...)
 
-cr_ft_xml(url, path = "~/.crossref", overwrite = TRUE, read = TRUE,
+cr_ft_xml(url, path = cr_cache_path(), overwrite = TRUE, read = TRUE,
   verbose = TRUE, ...)
 
-cr_ft_pdf(url, path = "~/.crossref", overwrite = TRUE, read = TRUE,
+cr_ft_pdf(url, path = cr_cache_path(), overwrite = TRUE, read = TRUE,
   cache = FALSE, verbose = TRUE, ...)
 }
 \arguments{
@@ -24,7 +24,10 @@ cr_ft_pdf(url, path = "~/.crossref", overwrite = TRUE, read = TRUE,
 
 \item{type}{(character) One of xml, plain, pdf, or all}
 
-\item{path}{(character) Path to store pdfs in. Default: \code{~/.crossref/}}
+\item{path}{(character) Path to store pdfs in. By default we use 
+\code{paste0(rappdirs::user_cache_dir(), "/crossref")}, but you can 
+set this directory to something different. Ignored unless getting 
+pdf}
 
 \item{overwrite}{(logical) Overwrite file if it exists already? 
 Default: \code{TRUE}}
@@ -60,6 +63,11 @@ only metadata for an article. Elsevier is perhaps the worst offender,
 for one because they have a lot of entries in Crossref TDM, but most
 of the links that are apparently full text are not in facct full text,
 but only metadata.
+}
+\note{
+This function is deprecated, and will be removed in the next 
+version. All text mining functionality will be moved to the new 
+package \code{crminer}.
 }
 \examples{
 \dontrun{
@@ -187,5 +195,9 @@ dois <- out$data$DOI[1:10]
 #   res[[i]] <- cr_ft_text(tmp, type = "pdf", cache=FALSE)
 # }
 }
+}
+\seealso{
+Other textmining: \code{\link{as.tdmurl}},
+  \code{\link{cr_ft_links}}, \code{\link{extract_xpdf}}
 }
 

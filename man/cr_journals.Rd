@@ -8,12 +8,12 @@
 cr_journals(issn = NULL, query = NULL, filter = NULL, offset = NULL,
   limit = NULL, sample = NULL, sort = NULL, order = NULL,
   facet = FALSE, works = FALSE, cursor = NULL, cursor_max = 5000,
-  .progress = "none", ...)
+  .progress = "none", flq = NULL, ...)
 
 cr_journals_(issn = NULL, query = NULL, filter = NULL, offset = NULL,
   limit = NULL, sample = NULL, sort = NULL, order = NULL,
   facet = FALSE, works = FALSE, cursor = NULL, cursor_max = 5000,
-  .progress = "none", parse = FALSE, ...)
+  .progress = "none", parse = FALSE, flq = NULL, ...)
 }
 \arguments{
 \item{issn}{One or more ISSN's. Format is XXXX-XXXX.}
@@ -22,16 +22,19 @@ cr_journals_(issn = NULL, query = NULL, filter = NULL, offset = NULL,
 
 \item{filter}{Filter options. See details.}
 
-\item{offset}{Number of record to start at, from 1 to infinity.}
+\item{offset}{Number of record to start at. Minimum: 1. For
+\code{\link{cr_works}}, and any function setting \code{works = TRUE},
+the maximum offset value is 10000. For larger requests use \code{cursor}.}
 
-\item{limit}{Number of results to return in the query. Not relavant when searching with specific
-dois. Default: 20. Max: 1000}
+\item{limit}{Number of results to return in the query. Not relavant when
+searching with specific dois. Default: 20. Max: 1000}
 
-\item{sample}{(integer) Number of random results to return. when you use the sample parameter, 
-the rows and offset parameters are ignored. Ignored unless \code{works=TRUE}}
+\item{sample}{(integer) Number of random results to return. when you use
+the sample parameter, the rows and offset parameters are ignored.
+Ignored unless \code{works=TRUE}. Max: 100}
 
-\item{sort}{(character) Field to sort on, one of score, relevance, updated, deposited, indexed, 
-or published.}
+\item{sort}{(character) Field to sort on, one of score, relevance, updated,
+deposited, indexed, or published.}
 
 \item{order}{(character) Sort order, one of 'asc' or 'desc'}
 
@@ -54,6 +57,19 @@ found than this value, you will get only those found.}
 "tk", "win", and "time".  See \code{\link[plyr]{create_progress_bar}} for details 
 of each. Only used when passing in multiple ids (e.g., multiple DOIs, DOI prefixes,
 etc.)}
+
+\item{flq}{field queries. One or more field queries. Acceptable set of 
+field query parameters are: 
+\itemize{
+ \item query.title    - Query title and subtitle
+ \item query.container-title    - Query container-title aka. publication name
+ \item query.author - Query author first and given names
+ \item query.editor - Query editor first and given names
+ \item query.chair    - Query chair first and given names
+ \item query.translator - Query translator first and given names
+ \item query.contributor    - Query author, editor, chair and translator 
+ first and given names
+}}
 
 \item{...}{Named parameters passed on to \code{\link[httr]{GET}}}
 
@@ -105,6 +121,10 @@ cr_journals_("2167-8359", works = TRUE, cursor = "*",
    cursor_max = 300, limit = 100)
 cr_journals_("2167-8359", works = TRUE, cursor = "*",
    cursor_max = 300, limit = 100, parse = TRUE)
+   
+# field queries
+## query.author
+cr_journals("2167-8359", works = TRUE, flq = c(`query.author` = 'Jane'))
 }
 }
 \references{

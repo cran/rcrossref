@@ -22,6 +22,11 @@
 #' XML and PDF, and content-type can be set with that URL as either XML or
 #' PDF to get that type. Anyway, expect changes...
 #' 
+#' @note This function is deprecated, and will be removed in the next 
+#' version. All text mining functionality will be moved to the new 
+#' package \code{crminer}.
+#' @family textmining
+#' 
 #' @return \code{NULL} if no full text links given; a list of tdmurl objects if
 #' links found.
 #' 
@@ -31,7 +36,7 @@
 #' cr_ft_links(doi = "10.5555/515151", "pdf")
 #' 
 #' # all links
-#' cr_ft_links(doi = "10.3897/phytokeys.42.7604", type = "all")
+#' cr_ft_links(doi = "10.3897/phytokeys.52.5250", type = "all")
 #' 
 #' # Get doi first from other fxn, then pass here
 #' out <- cr_works(filter=c(has_full_text = TRUE), limit = 50)
@@ -46,6 +51,8 @@
 #' }
 
 cr_ft_links <- function(doi, type='xml', ...) {
+  .Deprecated("crm_links", "crminer", "Will be removed in next version")
+  
   res <- cr_works_links(dois = doi, ...)[[1]]
   if (is.null(unlist(res$links))) {
     NULL 

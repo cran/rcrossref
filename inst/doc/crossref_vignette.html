@@ -224,7 +224,7 @@ hr {
 
 <h2>Citation search</h2>
 
-<p>CrossRef&#39;s <a href="http://www.crosscite.org/cn/">DOI Content Negotiation</a> service, where you can citations back in various formats, including <code>apa</code></p>
+<p>CrossRef&#39;s <a href="http://citation.crosscite.org/docs.html">DOI Content Negotiation</a> service, where you can citations back in various formats, including <code>apa</code></p>
 
 <pre><code class="r">cr_cn(dois = &quot;10.1371/journal.pone.0112608&quot;, format = &quot;text&quot;, style = &quot;apa&quot;)
 </code></pre>
@@ -290,7 +290,7 @@ hr {
 
 <h3>Look up funder information</h3>
 
-<pre><code class="r">cr_fundref(query=&quot;NSF&quot;)
+<pre><code class="r">cr_funders(query=&quot;NSF&quot;)
 </code></pre>
 
 <pre><code>#&gt; $meta
@@ -298,19 +298,19 @@ hr {
 #&gt; 1             8          NSF           0             20
 #&gt; 
 #&gt; $data
-#&gt; Source: local data frame [8 x 6]
-#&gt; 
+#&gt; # A tibble: 8 × 6
 #&gt;             id      location
-#&gt;          (chr)         (chr)
-#&gt; 1 501100000930     Australia
-#&gt; 2    100000001 United States
-#&gt; 3    100003187 United States
-#&gt; 4    100008367       Denmark
-#&gt; 5 501100004190        Norway
-#&gt; 6    100000179 United States
-#&gt; 7    100006445 United States
+#&gt;          &lt;chr&gt;         &lt;chr&gt;
+#&gt; 1    100003187 United States
+#&gt; 2    100008367       Denmark
+#&gt; 3 501100004190        Norway
+#&gt; 4    100000179 United States
+#&gt; 5    100006445 United States
+#&gt; 6 501100000930     Australia
+#&gt; 7    100000001 United States
 #&gt; 8 501100001809         China
-#&gt; Variables not shown: name (chr), alt.names (chr), uri (chr), tokens (chr)
+#&gt; # ... with 4 more variables: name &lt;chr&gt;, alt.names &lt;chr&gt;, uri &lt;chr&gt;,
+#&gt; #   tokens &lt;chr&gt;
 </code></pre>
 
 <h3>Check the DOI minting agency</h3>

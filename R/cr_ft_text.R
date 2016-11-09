@@ -3,7 +3,10 @@
 #' @export
 #' @param url (character) A URL.
 #' @param type (character) One of xml, plain, pdf, or all
-#' @param path (character) Path to store pdfs in. Default: \code{~/.crossref/}
+#' @param path (character) Path to store pdfs in. By default we use 
+#' \code{paste0(rappdirs::user_cache_dir(), "/crossref")}, but you can 
+#' set this directory to something different. Ignored unless getting 
+#' pdf 
 #' @param overwrite (logical) Overwrite file if it exists already? 
 #' Default: \code{TRUE}
 #' @param read (logical) If reading a pdf, this toggles whether we extract 
@@ -29,6 +32,12 @@
 #' for one because they have a lot of entries in Crossref TDM, but most
 #' of the links that are apparently full text are not in facct full text,
 #' but only metadata.
+#' 
+#' @note This function is deprecated, and will be removed in the next 
+#' version. All text mining functionality will be moved to the new 
+#' package \code{crminer}.
+#' @family textmining
+#' 
 #' @examples \dontrun{
 #' # pdf link
 #' cr_ft_links(doi = "10.5555/515151", "pdf")
@@ -155,9 +164,10 @@
 #' # }
 #' }
 
-cr_ft_text <- function(url, type='xml', path = "~/.crossref", overwrite = TRUE,
+cr_ft_text <- function(url, type='xml', path = cr_cache_path(), overwrite = TRUE,
   read=TRUE, verbose=TRUE, cache=TRUE, ...) {
-
+  
+  .Deprecated("crm_text", "crminer", "Will be removed in next version")
   auth <- cr_auth(url, type)
   switch( pick_type(type, url),
           xml = getTEXT(get_url(url, 'xml'), type, auth, ...),
@@ -166,6 +176,8 @@ cr_ft_text <- function(url, type='xml', path = "~/.crossref", overwrite = TRUE,
                        read, verbose, cache, ...)
   )
 }
+
+cr_cache_path <- function() paste0(rappdirs::user_cache_dir(), "/crossref")
 
 get_url <- function(a, b){
   url <- if (inherits(a, "tdmurl")) a[[1]] else a[[b]]
@@ -178,8 +190,10 @@ get_url <- function(a, b){
 
 #' @export
 #' @rdname cr_ft_text
-cr_ft_plain <- function(url, path = "~/.crossref", overwrite = TRUE, read=TRUE, 
+cr_ft_plain <- function(url, path = cr_cache_path(), overwrite = TRUE, read=TRUE, 
                         verbose=TRUE, ...) {
+  
+  .Deprecated("crm_plain", "crminer", "Will be removed in next version")
   if (is.null(url$plain[[1]])) {
     stop("no plain text link found", call. = FALSE)
   }
@@ -188,8 +202,10 @@ cr_ft_plain <- function(url, path = "~/.crossref", overwrite = TRUE, read=TRUE,
 
 #' @export
 #' @rdname cr_ft_text
-cr_ft_xml <- function(url, path = "~/.crossref", overwrite = TRUE, read=TRUE, 
+cr_ft_xml <- function(url, path = cr_cache_path(), overwrite = TRUE, read=TRUE, 
                       verbose=TRUE, ...) {
+  
+  .Deprecated("crm_xml", "crminer", "Will be removed in next version")
   if (is.null(url$xml[[1]])) {
     stop("no xml link found", call. = FALSE)
   }
@@ -198,8 +214,10 @@ cr_ft_xml <- function(url, path = "~/.crossref", overwrite = TRUE, read=TRUE,
 
 #' @export
 #' @rdname cr_ft_text
-cr_ft_pdf <- function(url, path = "~/.crossref", overwrite = TRUE, read=TRUE, 
+cr_ft_pdf <- function(url, path = cr_cache_path(), overwrite = TRUE, read=TRUE, 
                       cache=FALSE, verbose=TRUE, ...) {
+  
+  .Deprecated("crm_pdf", "crminer", "Will be removed in next version")
   if (is.null(url$pdf[[1]])) {
     stop("no pdf link found", call. = FALSE)
   }
@@ -207,7 +225,7 @@ cr_ft_pdf <- function(url, path = "~/.crossref", overwrite = TRUE, read=TRUE,
          read, verbose, cache, ...)
 }
 
-pick_type <- function(x, z){
+pick_type <- function(x, z) {
   x <- match.arg(x, c("xml","plain","pdf"))
   if (length(z) == 1) {
     avail <- attr(z[[1]], which = "type")
@@ -228,22 +246,23 @@ cr_auth <- function(url, type) {
                    plain = "text/plain",
                    pdf = "application/pdf"
     )
-    switch(mem_num,
-        `78` = {
-          key <- Sys.getenv("CROSSREF_TDM_ELSEVIER")
-          #add_headers(`X-ELS-APIKey` = key, Accept = type)
-          add_headers(`CR-Clickthrough-Client-Token` = key, Accept = type)
-        },
-        `263` = {
-          key <- Sys.getenv("CROSSREF_TDM")
-          add_headers(`CR-TDM-Client_Token` = key, Accept = type)
-          # add_headers(`CR-Clickthrough-Client-Token` = key, Accept = type)
-        },
-        `311` = {
-          add_headers(
-            `CR-Clickthrough-Client-Token` = Sys.getenv("CROSSREF_TDM"),
-            Accept = type)
-        }
+    switch(
+      mem_num,
+      `78` = {
+        key <- Sys.getenv("CROSSREF_TDM_ELSEVIER")
+        #add_headers(`X-ELS-APIKey` = key, Accept = type)
+        add_headers(`CR-Clickthrough-Client-Token` = key, Accept = type)
+      },
+      `263` = {
+        key <- Sys.getenv("CROSSREF_TDM")
+        add_headers(`CR-TDM-Client_Token` = key, Accept = type)
+        # add_headers(`CR-Clickthrough-Client-Token` = key, Accept = type)
+      },
+      `311` = {
+        add_headers(
+          `CR-Clickthrough-Client-Token` = Sys.getenv("CROSSREF_TDM"),
+          Accept = type)
+      }
     )
     # add_headers(`CR-TDM-Client_Token` = key, Accept = type)
     # add_headers(`CR-Clickthrough-Client-Token` = key, Accept = type)
