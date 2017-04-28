@@ -18,10 +18,7 @@ test_that("cr_works cursor basic functionality works", {
 test_that("cr_works cursor fails correctly", {
   skip_on_cran()
 
-  library('httr')
   expect_error(suppressWarnings(cr_works(cursor = 5)))
   expect_error(cr_works(cursor_max = 3.4),
                "cursor_max must be an integer")
 })
-
-Sys.sleep(1)

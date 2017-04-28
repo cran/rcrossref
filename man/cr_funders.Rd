@@ -38,9 +38,13 @@ deposited, indexed, or published.}
 
 \item{order}{(character) Sort order, one of 'asc' or 'desc'}
 
-\item{facet}{(logical) Include facet results. Default: \code{FALSE}}
+\item{facet}{(logical) Include facet results. Boolean or string with
+field to facet on. Valid fields are *, affiliation, funder-name,
+funder-doi, orcid, container-title, assertion, archive, update-type,
+issn, published, source, type-name, publisher-name, license,
+category-name, assertion-group. Default: \code{FALSE}}
 
-\item{works}{(logical) If TRUE, works returned as well, if not then not.}
+\item{works}{(logical) If \code{TRUE}, works returned as well, if not then not.}
 
 \item{cursor}{(character) Cursor character string to do deep paging. Default is None.
 Pass in '*' to start deep paging. Any combination of query, filters and facets may be
@@ -71,7 +75,7 @@ field query parameters are:
  first and given names
 }}
 
-\item{...}{Named parameters passed on to \code{\link[httr]{GET}}}
+\item{...}{Named parameters passed on to \code{\link[crul]{HttpClient}}}
 
 \item{parse}{(logical) Whether to output json \code{FALSE} or parse to
 list \code{TRUE}. Default: \code{FALSE}}
@@ -82,7 +86,7 @@ Search the CrossRef Fundref API
 \details{
 BEWARE: The API will only work for CrossRef DOIs.
 
-This function name changing to \code{cr_funders} in the next version - 
+This function name changing to \code{cr_funders} in the next version -
 both work for now
 }
 \section{NOTE}{
@@ -91,6 +95,7 @@ Funders without IDs don't show up on the /funders route, and in this
 function. Some funders don't have assigned IDs in Crossref's system,
 so won't show up in searches.
 }
+
 \examples{
 \dontrun{
 cr_funders(query="NSF", limit=1)
@@ -106,9 +111,14 @@ cr_funders(dois='10.13039/100000001', works=TRUE, limit=5)
 cr_funders(dois=c('10.13039/100000001','10.13039/100000015'))
 cr_funders(dois=c('10.13039/100000001','10.13039/100000015'), works=TRUE)
 
+## get facets back
+cr_funders("10.13039/100000001", works=TRUE, facet=TRUE, limit = 0)
+cr_funders("10.13039/100000001", works=TRUE, facet="license:*", limit = 0)
+cr_funders('100000001', works = TRUE, cursor = "*", cursor_max = 500,
+   limit = 100, facet=TRUE)
+
 # Curl options
-library('httr')
-cr_funders(dois='10.13039/100000001', config=verbose())
+cr_funders(dois='10.13039/100000001', verbose = TRUE)
 
 # If not found, and > 1 DOI given, those not found dropped
 cr_funders(dois=c("adfadfaf","asfasf"))
@@ -117,7 +127,7 @@ cr_funders(dois=c("10.13039/100000001","asfasf"))
 cr_funders(dois=c("10.13039/100000001","asfasf"), works=TRUE)
 
 # Use the cursor for deep paging
-cr_funders('100000001', works = TRUE, cursor = "*", cursor_max = 500, 
+cr_funders('100000001', works = TRUE, cursor = "*", cursor_max = 500,
    limit = 100)
 cr_funders(c('100000001', '100000002'), works = TRUE, cursor = "*",
    cursor_max = 300, limit = 100)
@@ -130,7 +140,7 @@ cr_funders_('10.13039/100000001', works = TRUE, cursor = "*",
    cursor_max = 300, limit = 100)
 cr_funders_('10.13039/100000001', works = TRUE, cursor = "*",
    cursor_max = 300, limit = 100, parse = TRUE)
-   
+
 # field queries
 ## query.container-title
 cr_funders('10.13039/100000001', works = TRUE,
@@ -140,4 +150,3 @@ cr_funders('10.13039/100000001', works = TRUE,
 \references{
 \url{https://github.com/CrossRef/rest-api-doc/blob/master/rest_api.md}
 }
-

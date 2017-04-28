@@ -232,7 +232,7 @@ hr {
 <pre><code>#&gt; [1] &quot;Wang, Q., &amp; Taylor, J. E. (2014). Quantifying Human Mobility Perturbation and Resilience in Hurricane Sandy. PLoS ONE, 9(11), e112608. doi:10.1371/journal.pone.0112608&quot;
 </code></pre>
 
-<p>There are a lot more styles. We include a dataset as a character vector within the package, accessible via the <code>get_styles()</code> function, e.g., </p>
+<p>There are a lot more styles. We include a dataset as a character vector within the package, accessible via the <code>get_styles()</code> function, e.g.,</p>
 
 <pre><code class="r">get_styles()[1:5]
 </code></pre>
@@ -251,7 +251,7 @@ hr {
 
 <pre><code>#&gt; @article{Frank_1970,
 #&gt;  doi = {10.1126/science.169.3946.635},
-#&gt;  url = {http://dx.doi.org/10.1126/science.169.3946.635},
+#&gt;  url = {https://doi.org/10.1126%2Fscience.169.3946.635},
 #&gt;  year = 1970,
 #&gt;  month = {aug},
 #&gt;  publisher = {American Association for the Advancement of Science ({AAAS})},
@@ -269,9 +269,10 @@ hr {
 <pre><code class="r">cr_cn(dois = &quot;10.6084/m9.figshare.97218&quot;, format = &quot;bibentry&quot;)
 </code></pre>
 
-<pre><code>#&gt; Boettiger; C (2012). &quot;Regime shifts in ecology and evolution (PhD
-#&gt; Dissertation).&quot; &lt;URL: http://doi.org/10.6084/m9.figshare.97218&gt;,
-#&gt; &lt;URL: http://dx.doi.org/10.6084/m9.figshare.97218&gt;.
+<pre><code>#&gt; Boettiger C (2012). &quot;Regime shifts in ecology and evolution (PhD
+#&gt; Dissertation).&quot; doi: 10.6084/m9.figshare.97218 (URL:
+#&gt; http://doi.org/10.6084/m9.figshare.97218), &lt;URL:
+#&gt; https://doi.org/10.6084/m9.figshare.97218&gt;.
 </code></pre>
 
 <h2>Citation count</h2>
@@ -281,12 +282,12 @@ hr {
 <pre><code class="r">cr_citation_count(doi=&quot;10.1371/journal.pone.0042793&quot;)
 </code></pre>
 
-<pre><code>#&gt; [1] 7
+<pre><code>#&gt; [1] 13
 </code></pre>
 
 <h2>Search Crossref metadata API</h2>
 
-<p>There are two functions that use an older Crossre API: <code>cr_search()</code> and <code>cr_search_free()</code>. You can of course use them, but the newer Crossref API available through various functions (<code>cr_agency()</code>, <code>cr_fundref()</code>, <code>cr_journals()</code>, <code>cr_licenses()</code>, <code>cr_members()</code>, <code>cr_prefixes()</code>, and <code>cr_works()</code>) is more powerful and will recieve more support going forward. The following functions (of the newer set just mentioend) all use the <a href="https://github.com/CrossRef/rest-api-doc/blob/master/rest_api.md">CrossRef API</a>.</p>
+<p>The following functions all use the <a href="https://github.com/CrossRef/rest-api-doc/blob/master/rest_api.md">CrossRef API</a>.</p>
 
 <h3>Look up funder information</h3>
 
@@ -301,16 +302,19 @@ hr {
 #&gt; # A tibble: 8 × 6
 #&gt;             id      location
 #&gt;          &lt;chr&gt;         &lt;chr&gt;
-#&gt; 1    100003187 United States
-#&gt; 2    100008367       Denmark
-#&gt; 3 501100004190        Norway
-#&gt; 4    100000179 United States
-#&gt; 5    100006445 United States
-#&gt; 6 501100000930     Australia
-#&gt; 7    100000001 United States
+#&gt; 1    100000179 United States
+#&gt; 2 501100000930     Australia
+#&gt; 3    100000001 United States
+#&gt; 4    100003187 United States
+#&gt; 5    100008367       Denmark
+#&gt; 6 501100004190        Norway
+#&gt; 7    100006445 United States
 #&gt; 8 501100001809         China
 #&gt; # ... with 4 more variables: name &lt;chr&gt;, alt.names &lt;chr&gt;, uri &lt;chr&gt;,
 #&gt; #   tokens &lt;chr&gt;
+#&gt; 
+#&gt; $facets
+#&gt; NULL
 </code></pre>
 
 <h3>Check the DOI minting agency</h3>
@@ -336,19 +340,21 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1        254101           NA           0              1
+#&gt; 1        689036           NA           0              1
 #&gt; 
 #&gt; $data
-#&gt; Source: local data frame [1 x 23]
-#&gt; 
-#&gt;   alternative.id container.title    created  deposited
-#&gt;            (chr)           (chr)      (chr)      (chr)
-#&gt; 1                                2015-11-11 2015-11-11
-#&gt; Variables not shown: DOI (chr), funder (chr), indexed (chr), ISBN (chr),
-#&gt;   ISSN (chr), issued (chr), link (chr), member (chr), prefix (chr),
-#&gt;   publisher (chr), reference.count (chr), score (chr), source (chr),
-#&gt;   subject (chr), title (chr), type (chr), URL (chr), assertion (chr),
-#&gt;   author (chr)
+#&gt; # A tibble: 1 × 29
+#&gt;   alternative.id               container.title    created  deposited
+#&gt;            &lt;chr&gt;                         &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;
+#&gt; 1           1142 Regional Environmental Change 2017-03-29 2017-03-29
+#&gt; # ... with 25 more variables: DOI &lt;chr&gt;, funder &lt;list&gt;, indexed &lt;chr&gt;,
+#&gt; #   ISBN &lt;chr&gt;, ISSN &lt;chr&gt;, issued &lt;chr&gt;, license_date &lt;chr&gt;,
+#&gt; #   license_URL &lt;chr&gt;, license_delay.in.days &lt;chr&gt;,
+#&gt; #   license_content.version &lt;chr&gt;, link &lt;list&gt;, member &lt;chr&gt;,
+#&gt; #   prefix &lt;chr&gt;, publisher &lt;chr&gt;, reference.count &lt;chr&gt;, score &lt;chr&gt;,
+#&gt; #   source &lt;chr&gt;, subject &lt;chr&gt;, title &lt;chr&gt;, type &lt;chr&gt;,
+#&gt; #   update.policy &lt;chr&gt;, URL &lt;chr&gt;, assertion &lt;list&gt;, author &lt;list&gt;,
+#&gt; #   `clinical-trial-number` &lt;list&gt;
 #&gt; 
 #&gt; $facets
 #&gt; NULL
@@ -359,14 +365,18 @@ hr {
 <pre><code class="r">cr_journals(issn=c(&#39;1803-2427&#39;,&#39;2326-4225&#39;))
 </code></pre>
 
-<pre><code>#&gt; Source: local data frame [2 x 15]
-#&gt; 
+<pre><code>#&gt; $data
+#&gt; # A tibble: 2 × 16
 #&gt;   alternative.id container.title created deposited funder indexed  ISBN
-#&gt;            (chr)           (chr)   (chr)     (chr)  (chr)   (chr) (chr)
+#&gt;            &lt;chr&gt;           &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt; &lt;list&gt;   &lt;chr&gt; &lt;chr&gt;
 #&gt; 1                                                  &lt;NULL&gt;              
 #&gt; 2                                                  &lt;NULL&gt;              
-#&gt; Variables not shown: ISSN (chr), issued (chr), link (chr), publisher
-#&gt;   (chr), subject (chr), title (chr), assertion (chr), author (chr)
+#&gt; # ... with 9 more variables: ISSN &lt;chr&gt;, issued &lt;chr&gt;, link &lt;list&gt;,
+#&gt; #   publisher &lt;chr&gt;, subject &lt;chr&gt;, title &lt;chr&gt;, assertion &lt;list&gt;,
+#&gt; #   author &lt;list&gt;, `clinical-trial-number` &lt;list&gt;
+#&gt; 
+#&gt; $facets
+#&gt; NULL
 </code></pre>
 
 <h3>Search license information</h3>
@@ -376,25 +386,30 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1            11     elsevier           0             20
+#&gt; 1            17     elsevier           0             20
 #&gt; 
 #&gt; $data
-#&gt; Source: local data frame [11 x 2]
-#&gt; 
+#&gt; # A tibble: 17 × 2
 #&gt;                                                                            URL
-#&gt;                                                                          (chr)
+#&gt;                                                                          &lt;chr&gt;
 #&gt; 1                            http://creativecommons.org/licenses/by-nc-nd/3.0/
 #&gt; 2                            http://creativecommons.org/licenses/by-nc-nd/4.0/
 #&gt; 3                                  http://creativecommons.org/licenses/by/3.0/
-#&gt; 4                                   http://doi.wiley.com/10.1002/tdm_license_1
-#&gt; 5                            http://onlinelibrary.wiley.com/termsAndConditions
-#&gt; 6         http://www.acm.org/publications/policies/copyright_policy#Background
-#&gt; 7                         http://www.elsevier.com/open-access/userlicense/1.0/
-#&gt; 8                                 http://www.elsevier.com/tdm/userlicense/1.0/
-#&gt; 9                                                  http://www.springer.com/tdm
-#&gt; 10 © 2007 Elsevier Masson SAS. All rights reserved. The patient figure in Figu
-#&gt; 11 © 2012, Elsevier Inc., All Rights Reserved. Figure 8, part (B) (images of H
-#&gt; Variables not shown: work.count (int)
+#&gt; 4                                   http://creativecommons.org/licenses/by/4.0
+#&gt; 5                                  http://creativecommons.org/licenses/by/4.0/
+#&gt; 6                                   http://doi.wiley.com/10.1002/tdm_license_1
+#&gt; 7                                 http://doi.wiley.com/10.1002/tdm_license_1.1
+#&gt; 8                       http://journals.iucr.org/services/copyrightpolicy.html
+#&gt; 9                   http://journals.iucr.org/services/copyrightpolicy.html#TDM
+#&gt; 10                           http://onlinelibrary.wiley.com/termsAndConditions
+#&gt; 11        http://www.acm.org/publications/policies/copyright_policy#Background
+#&gt; 12     http://www.bioone.org/page/resources/researchers/rights_and_permissions
+#&gt; 13                        http://www.elsevier.com/open-access/userlicense/1.0/
+#&gt; 14                                http://www.elsevier.com/tdm/userlicense/1.0/
+#&gt; 15                                      http://www.emeraldinsight.com/page/tdm
+#&gt; 16                                                 http://www.springer.com/tdm
+#&gt; 17 © 2012, Elsevier Inc., All Rights Reserved. Figure 8, part (B) (images of H
+#&gt; # ... with 1 more variables: work.count &lt;int&gt;
 </code></pre>
 
 <h3>Search based on DOI prefixes</h3>
@@ -406,16 +421,18 @@ hr {
 #&gt; NULL
 #&gt; 
 #&gt; $data
-#&gt; Source: local data frame [5 x 3]
-#&gt; 
-#&gt;                               member                              name
-#&gt;                                (chr)                             (chr)
-#&gt; 1   http://id.crossref.org/member/78                       Elsevier BV
-#&gt; 2  http://id.crossref.org/member/340  Public Library of Science (PLoS)
-#&gt; 3  http://id.crossref.org/member/297 Springer Science + Business Media
-#&gt; 4 http://id.crossref.org/member/1989              Co-Action Publishing
-#&gt; 5  http://id.crossref.org/member/286     Oxford University Press (OUP)
-#&gt; Variables not shown: prefix (chr)
+#&gt;                               member                             name
+#&gt; 1   http://id.crossref.org/member/78                      Elsevier BV
+#&gt; 2  http://id.crossref.org/member/340 Public Library of Science (PLoS)
+#&gt; 3  http://id.crossref.org/member/297                  Springer Nature
+#&gt; 4 http://id.crossref.org/member/1989             Co-Action Publishing
+#&gt; 5  http://id.crossref.org/member/286    Oxford University Press (OUP)
+#&gt;                                  prefix
+#&gt; 1 http://id.crossref.org/prefix/10.1016
+#&gt; 2 http://id.crossref.org/prefix/10.1371
+#&gt; 3 http://id.crossref.org/prefix/10.1023
+#&gt; 4 http://id.crossref.org/prefix/10.4176
+#&gt; 5 http://id.crossref.org/prefix/10.1093
 #&gt; 
 #&gt; $facets
 #&gt; list()
@@ -428,40 +445,51 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1            17      ecology           0              5
+#&gt; 1            18      ecology           0              5
 #&gt; 
 #&gt; $data
-#&gt; Source: local data frame [5 x 40]
-#&gt; 
-#&gt;      id                                             primary_name
-#&gt;   (int)                                                    (chr)
-#&gt; 1  7052                         Chinese Journal of Plant Ecology
-#&gt; 2  6933                          Knowledge Ecology International
-#&gt; 3  7278 Korean Society of Ecology and Infrastructure Engineering
-#&gt; 4  7745                             Institute of Applied Ecology
-#&gt; 5   336                    Japanese Society of Microbial Ecology
-#&gt; Variables not shown: location (chr), last_status_check_time (date),
-#&gt;   backfile.dois (chr), current.dois (chr), total.dois (chr), prefixes
-#&gt;   (chr), coverge.funders.backfile (chr), coverge.licenses.backfile (chr),
-#&gt;   coverge.funders.current (chr), coverge.resource.links.backfile (chr),
-#&gt;   coverge.orcids.backfile (chr), coverge.update.policies.current (chr),
-#&gt;   coverge.orcids.current (chr), coverge.references.backfile (chr),
-#&gt;   coverge.award.numbers.backfile (chr), coverge.update.policies.backfile
-#&gt;   (chr), coverge.licenses.current (chr), coverge.award.numbers.current
-#&gt;   (chr), coverge.resource.links.current (chr), coverge.references.current
-#&gt;   (chr), flags.deposits.orcids.current (chr), flags.deposits (chr),
-#&gt;   flags.deposits.update.policies.backfile (chr),
-#&gt;   flags.deposits.award.numbers.current (chr),
-#&gt;   flags.deposits.resource.links.current (chr), flags.deposits.articles
-#&gt;   (chr), flags.deposits.funders.current (chr),
-#&gt;   flags.deposits.references.backfile (chr),
-#&gt;   flags.deposits.licenses.backfile (chr),
-#&gt;   flags.deposits.award.numbers.backfile (chr),
-#&gt;   flags.deposits.references.current (chr),
-#&gt;   flags.deposits.resource.links.backfile (chr),
-#&gt;   flags.deposits.orcids.backfile (chr), flags.deposits.funders.backfile
-#&gt;   (chr), flags.deposits.update.policies.current (chr),
-#&gt;   flags.deposits.licenses.current (chr), names (chr), tokens (chr)
+#&gt; # A tibble: 5 × 48
+#&gt;      id
+#&gt;   &lt;int&gt;
+#&gt; 1  7052
+#&gt; 2  6933
+#&gt; 3  7278
+#&gt; 4  7745
+#&gt; 5  9167
+#&gt; # ... with 47 more variables: primary_name &lt;chr&gt;, location &lt;chr&gt;,
+#&gt; #   last_status_check_time &lt;date&gt;, total.dois &lt;chr&gt;, current.dois &lt;chr&gt;,
+#&gt; #   backfile.dois &lt;chr&gt;, prefixes &lt;chr&gt;,
+#&gt; #   coverge.affiliations.current &lt;chr&gt;, coverge.funders.backfile &lt;chr&gt;,
+#&gt; #   coverge.licenses.backfile &lt;chr&gt;, coverge.funders.current &lt;chr&gt;,
+#&gt; #   coverge.affiliations.backfile &lt;chr&gt;,
+#&gt; #   coverge.resource.links.backfile &lt;chr&gt;, coverge.orcids.backfile &lt;chr&gt;,
+#&gt; #   coverge.update.policies.current &lt;chr&gt;, coverge.orcids.current &lt;chr&gt;,
+#&gt; #   coverge.references.backfile &lt;chr&gt;,
+#&gt; #   coverge.award.numbers.backfile &lt;chr&gt;,
+#&gt; #   coverge.update.policies.backfile &lt;chr&gt;,
+#&gt; #   coverge.licenses.current &lt;chr&gt;, coverge.award.numbers.current &lt;chr&gt;,
+#&gt; #   coverge.abstracts.backfile &lt;chr&gt;,
+#&gt; #   coverge.resource.links.current &lt;chr&gt;, coverge.abstracts.current &lt;chr&gt;,
+#&gt; #   coverge.references.current &lt;chr&gt;,
+#&gt; #   flags.deposits.abstracts.current &lt;chr&gt;,
+#&gt; #   flags.deposits.orcids.current &lt;chr&gt;, flags.deposits &lt;chr&gt;,
+#&gt; #   flags.deposits.affiliations.backfile &lt;chr&gt;,
+#&gt; #   flags.deposits.update.policies.backfile &lt;chr&gt;,
+#&gt; #   flags.deposits.award.numbers.current &lt;chr&gt;,
+#&gt; #   flags.deposits.resource.links.current &lt;chr&gt;,
+#&gt; #   flags.deposits.articles &lt;chr&gt;,
+#&gt; #   flags.deposits.affiliations.current &lt;chr&gt;,
+#&gt; #   flags.deposits.funders.current &lt;chr&gt;,
+#&gt; #   flags.deposits.references.backfile &lt;chr&gt;,
+#&gt; #   flags.deposits.abstracts.backfile &lt;chr&gt;,
+#&gt; #   flags.deposits.licenses.backfile &lt;chr&gt;,
+#&gt; #   flags.deposits.award.numbers.backfile &lt;chr&gt;,
+#&gt; #   flags.deposits.references.current &lt;chr&gt;,
+#&gt; #   flags.deposits.resource.links.backfile &lt;chr&gt;,
+#&gt; #   flags.deposits.orcids.backfile &lt;chr&gt;,
+#&gt; #   flags.deposits.funders.backfile &lt;chr&gt;,
+#&gt; #   flags.deposits.update.policies.current &lt;chr&gt;,
+#&gt; #   flags.deposits.licenses.current &lt;chr&gt;, names &lt;chr&gt;, tokens &lt;chr&gt;
 #&gt; 
 #&gt; $facets
 #&gt; NULL
@@ -469,16 +497,21 @@ hr {
 
 <h3>Get N random DOIs</h3>
 
-<p><code>cr_r()</code> uses the function <code>cr_works()</code> internally. </p>
+<p><code>cr_r()</code> uses the function <code>cr_works()</code> internally.</p>
 
 <pre><code class="r">cr_r()
 </code></pre>
 
-<pre><code>#&gt;  [1] &quot;10.1017/s0022050700092342&quot;        &quot;10.5631/jibirin.79.2073&quot;         
-#&gt;  [3] &quot;10.1111/j.1745-3933.2008.00437.x&quot; &quot;10.1190/1.1892296&quot;               
-#&gt;  [5] &quot;10.1097/00001756-200307180-00016&quot; &quot;10.1016/s0002-8703(96)90261-6&quot;   
-#&gt;  [7] &quot;10.1002/9781444351071.wbeghm146&quot;  &quot;10.1134/1.1825531&quot;               
-#&gt;  [9] &quot;10.1017/cbo9780511609220.008&quot;     &quot;10.1111/j.1469-7793.2000.00223.x&quot;
+<pre><code>#&gt;  [1] &quot;10.1016/j.chemosphere.2012.06.036&quot;
+#&gt;  [2] &quot;10.1117/12.2249178&quot;               
+#&gt;  [3] &quot;10.1111/j.1469-8137.2004.01086.x&quot; 
+#&gt;  [4] &quot;10.1016/j.orthtr.2014.07.013&quot;     
+#&gt;  [5] &quot;10.1086/633704&quot;                   
+#&gt;  [6] &quot;10.1017/s0020860400090355&quot;        
+#&gt;  [7] &quot;10.1111/coep.12229&quot;               
+#&gt;  [8] &quot;10.1524/ract.1967.8.4.214&quot;        
+#&gt;  [9] &quot;10.1016/s0040-4020(01)98752-6&quot;    
+#&gt; [10] &quot;10.1021/nl200189w&quot;
 </code></pre>
 
 <p>You can pass in the number of DOIs you want back (default is 10)</p>
@@ -486,63 +519,8 @@ hr {
 <pre><code class="r">cr_r(2)
 </code></pre>
 
-<pre><code>#&gt; [1] &quot;10.17660/actahortic.2004.645.22&quot; &quot;10.1017/cbo9780511665202.009&quot;
-</code></pre>
-
-<h3>The older functions and API</h3>
-
-<p>Search by author</p>
-
-<pre><code class="r">cr_search(query = c(&quot;renear&quot;, &quot;palmer&quot;), rows = 3, sort = &quot;year&quot;)[1:2,-6]
-</code></pre>
-
-<pre><code>#&gt;                                                   doi     score
-#&gt; 1         http://dx.doi.org/10.1007/978-3-658-12433-5 0.7333419
-#&gt; 2 http://dx.doi.org/10.13110/merrpalmquar1982.62.1.fm 0.6914014
-#&gt;   normalizedScore                                 title
-#&gt; 1              22 Berufsbezogene Kreativitätsdiagnostik
-#&gt; 2              21                          Front Matter
-#&gt;                                                                  fullCitation
-#&gt; 1               Carolin Palmer, 2016, &#39;Berufsbezogene Kreativitätsdiagnostik&#39;
-#&gt; 2 2016, &#39;Front Matter&#39;, &lt;i&gt;Merrill-Palmer Quarterly&lt;/i&gt;, vol. 62, no. 1, p. i
-#&gt;   year
-#&gt; 1 2016
-#&gt; 2 2016
-</code></pre>
-
-<p>Search by DOI</p>
-
-<pre><code class="r">cr_search(doi = &quot;10.1890/10-0340.1&quot;)[,-6]
-</code></pre>
-
-<pre><code>#&gt;                                   doi   score normalizedScore
-#&gt; 1 http://dx.doi.org/10.1890/10-0340.1 18.1204             100
-#&gt;                                                            title
-#&gt; 1 The arcsine is asinine: the analysis of proportions in ecology
-#&gt;                                                                                                                                           fullCitation
-#&gt; 1 David I. Warton, Francis K. C. Hui, 2011, &#39;The arcsine is asinine: the analysis of proportions in ecology&#39;, &lt;i&gt;Ecology&lt;/i&gt;, vol. 92, no. 1, pp. 3-10
-#&gt;   year
-#&gt; 1 2011
-</code></pre>
-
-<p>Free search</p>
-
-<pre><code class="r">queries &lt;- c(&quot;Piwowar sharing data PLOS one&quot;, &quot;Priem Scientometrics 2.0 social web&quot;,
-  &quot;William Gunn A Crosstalk Between Myeloma Cells&quot;,
- &quot;karthik ram Metapopulation dynamics override local limits&quot;)
-cr_search_free(queries)[,-4]
-</code></pre>
-
-<pre><code>#&gt;                                                        text match
-#&gt; 1                             Piwowar sharing data PLOS one  TRUE
-#&gt; 2                       Priem Scientometrics 2.0 social web  TRUE
-#&gt; 3            William Gunn A Crosstalk Between Myeloma Cells  TRUE
-#&gt; 4 karthik ram Metapopulation dynamics override local limits  TRUE
-#&gt;                                              doi    score
-#&gt; 1 http://dx.doi.org/10.1371/journal.pone.0000308 3.327027
-#&gt; 2        http://dx.doi.org/10.5210/fm.v15i7.2874 3.583743
-#&gt; 3  http://dx.doi.org/10.1634/stemcells.2005-0220 2.817906
-#&gt; 4            http://dx.doi.org/10.1890/08-0228.1 3.960837
+<pre><code>#&gt; [1] &quot;10.1163/ej.9789024727186.123-268.6&quot;
+#&gt; [2] &quot;10.1016/0044-8486(76)90026-0&quot;
 </code></pre>
 
 </body>

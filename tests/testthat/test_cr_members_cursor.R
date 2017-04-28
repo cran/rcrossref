@@ -18,11 +18,11 @@ test_that("cr_members cursor basic functionality works", {
 test_that("cr_members cursor fails correctly", {
   skip_on_cran()
 
-  library('httr')
   expect_warning(cr_members(cursor = 5),
                "This route does not support cursor")
   expect_error(cr_works(cursor_max = 3.4),
                "cursor_max must be an integer")
 })
 
-Sys.sleep(1)
+Sys.sleep(2)
+

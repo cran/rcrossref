@@ -10,50 +10,50 @@ cr_cn(dois, format = "bibtex", style = "apa", locale = "en-US",
 \arguments{
 \item{dois}{Search by a single DOI or many DOIs.}
 
-\item{format}{Name of the format. One of "rdf-xml", "turtle", 
-"citeproc-json", "citeproc-json-ish", "text", "ris", "bibtex" (default), 
-"crossref-xml", "datacite-xml","bibentry", or "crossref-tdm". The format 
+\item{format}{Name of the format. One of "rdf-xml", "turtle",
+"citeproc-json", "citeproc-json-ish", "text", "ris", "bibtex" (default),
+"crossref-xml", "datacite-xml","bibentry", or "crossref-tdm". The format
 "citeproc-json-ish" is a format that is not quite proper citeproc-json}
 
-\item{style}{a CSL style (for text format only). See \code{\link{get_styles}}
+\item{style}{a CSL style (for text format only). See \code{\link[=get_styles]{get_styles()}}
 for options. Default: apa. If there's a style that CrossRef doesn't support
 you'll get a  \code{(500) Internal Server Error}}
 
-\item{locale}{Language locale. See \code{?Sys.getlocale}}
+\item{locale}{Lansguage locale. See \code{?Sys.getlocale}}
 
-\item{raw}{(logical) Return raw text in the format given by \code{format} 
-parameter. Default: FALSE}
+\item{raw}{(logical) Return raw text in the format given by \code{format}
+parameter. Default: \code{FALSE}}
 
 \item{.progress}{Show a \code{plyr}-style progress bar? Options are "none", "text", 
 "tk", "win", and "time".  See \code{\link[plyr]{create_progress_bar}} for details 
 of each. Only used when passing in multiple ids (e.g., multiple DOIs, DOI prefixes,
 etc.)}
 
-\item{...}{Named parameters passed on to \code{\link[httr]{GET}}}
+\item{...}{Named parameters passed on to \code{\link[crul]{HttpClient}}}
 }
 \description{
 Get citations in various formats from CrossRef.
 }
 \details{
-See \url{http://citation.crosscite.org/docs.html} for more info 
+See \url{http://citation.crosscite.org/docs.html} for more info
 on the Crossref Content Negotiation API service.
-  
-  DataCite DOIs: Some values of the \code{format} parameter won't work with 
-  DataCite DOIs, i.e. "citeproc-json", "crossref-xml", "crossref-tdm", 
-    "onix-xml". 
-  
-  MEDRA DOIs only work with "rdf-xml", "turtle", "citeproc-json-ish", "ris", 
-  "bibtex", "bibentry", "onix-xml".
-  
-  See examples below.
-  
-  See \code{\link{cr_agency}}
-  
-  Note that the format type \code{citeproc-json} uses the CrossRef API at 
-  \code{api.crossref.org}, while all others are content negotiated via
-  \code{http://data.crossref.org}, \code{http://data.datacite.org} or 
-  \code{http://data.medra.org}. DOI agency is checked first (see 
-  \code{\link{cr_agency}}).
+
+DataCite DOIs: Some values of the \code{format} parameter won't work with
+DataCite DOIs, i.e. "citeproc-json", "crossref-xml", "crossref-tdm",
+"onix-xml".
+
+MEDRA DOIs only work with "rdf-xml", "turtle", "citeproc-json-ish", "ris",
+"bibtex", "bibentry", "onix-xml".
+
+See examples below.
+
+See \code{\link[=cr_agency]{cr_agency()}}
+
+Note that the format type \code{citeproc-json} uses the CrossRef API at
+\code{api.crossref.org}, while all others are content negotiated via
+\code{http://data.crossref.org}, \code{http://data.datacite.org} or
+\code{http://data.medra.org}. DOI agency is checked first (see
+\code{\link[=cr_agency]{cr_agency()}}).
 }
 \examples{
 \dontrun{
@@ -121,4 +121,3 @@ cr_cn(dois = "10.1002/app.27716", format = "citeproc-json", raw = TRUE)
 cr_cn("10.1890/0012-9615(1999)069[0569:EDILSA]2.0.CO;2")
 }
 }
-

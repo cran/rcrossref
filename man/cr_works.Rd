@@ -38,7 +38,11 @@ deposited, indexed, or published.}
 
 \item{order}{(character) Sort order, one of 'asc' or 'desc'}
 
-\item{facet}{(logical) Include facet results. Default: \code{FALSE}}
+\item{facet}{(logical) Include facet results. Boolean or string with
+field to facet on. Valid fields are *, affiliation, funder-name,
+funder-doi, orcid, container-title, assertion, archive, update-type,
+issn, published, source, type-name, publisher-name, license,
+category-name, assertion-group. Default: \code{FALSE}}
 
 \item{cursor}{(character) Cursor character string to do deep paging. Default is None.
 Pass in '*' to start deep paging. Any combination of query, filters and facets may be
@@ -69,7 +73,7 @@ field query parameters are:
  first and given names
 }}
 
-\item{...}{Named parameters passed on to \code{\link[httr]{GET}}}
+\item{...}{Named parameters passed on to \code{\link[crul]{HttpClient}}}
 
 \item{parse}{(logical) Whether to output json \code{FALSE} or parse to
 list \code{TRUE}. Default: \code{FALSE}}
@@ -85,12 +89,23 @@ The API will only work for CrossRef DOIs.
 \section{Functions}{
 
 \itemize{
- \item \code{cr_works()} - Does data request and parses to data.frame for
- easy downstream consumption
- \item \code{cr_works_()} - Does data request, and gives back json (default) 
- or lists, with no attempt to parse to data.frame's
+\item \code{cr_works()} - Does data request and parses to data.frame for
+easy downstream consumption
+\item \code{cr_works_()} - Does data request, and gives back json (default)
+or lists, with no attempt to parse to data.frame's
 }
 }
+
+\section{Explanation of some data fields}{
+
+\itemize{
+\item score: a term frequency, inverse document frequency score that
+comes from the Crossref Solr backend, based on bibliographic metadata
+fields title, publication title, authors, ISSN, publisher, and
+date of publication.
+}
+}
+
 \examples{
 \dontrun{
 # Works funded by the NSF
@@ -116,17 +131,19 @@ cr_works(filter=c(has_clinical_trial_number = TRUE))
 cr_works(dois='10.1063/1.3593378')
 cr_works('10.1371/journal.pone.0033693')
 cr_works(dois='10.1007/12080.1874-1746')
-cr_works(dois=c('10.1007/12080.1874-1746','10.1007/10452.1573-5125', 
+cr_works(dois=c('10.1007/12080.1874-1746','10.1007/10452.1573-5125',
    '10.1111/(issn)1442-9993'))
 
 # progress bar
-cr_works(dois=c('10.1007/12080.1874-1746','10.1007/10452.1573-5125'), 
+cr_works(dois=c('10.1007/12080.1874-1746','10.1007/10452.1573-5125'),
    .progress="text")
 
 # Include facetting in results
 cr_works(query="NSF", facet=TRUE)
 ## Get facets only, by setting limit=0
 cr_works(query="NSF", facet=TRUE, limit=0)
+## you can also set facet to a query
+cr_works(facet = "license:*", limit=0)
 
 # Sort results
 cr_works(query="ecology", sort='relevance', order="asc")
@@ -138,35 +155,34 @@ cr_works(sample=1)
 cr_works(sample=10)
 
 # You can pass in dot separated fields to filter on specific fields
-cr_works(filter=c(award.number='CBET-0756451', 
+cr_works(filter=c(award.number='CBET-0756451',
    award.funder='10.13039/100000001'))
 
 # Use the cursor for deep paging
 cr_works(query="NSF", cursor = "*", cursor_max = 300, limit = 100)
-cr_works(query="NSF", cursor = "*", cursor_max = 300, limit = 100, 
+cr_works(query="NSF", cursor = "*", cursor_max = 300, limit = 100,
    facet = TRUE)
 
 # Low level function - does no parsing to data.frame, get json or a list
 cr_works_(query = "NSF")
 cr_works_(query = "NSF", parse=TRUE)
 cr_works_(query="NSF", cursor = "*", cursor_max = 300, limit = 100)
-cr_works_(query="NSF", cursor = "*", cursor_max = 300, limit = 100, 
+cr_works_(query="NSF", cursor = "*", cursor_max = 300, limit = 100,
    parse=TRUE)
-   
+
 # field queries
 ## query.author
 res <- cr_works(query = "ecology", flq = c(query.author = 'Boettiger'))
 
 ## query.container-title
-res <- cr_works(query = "ecology", 
+res <- cr_works(query = "ecology",
   flq = c(`query.container-title` = 'Ecology'))
 
 ## query.author and query.title
-res <- cr_works(query = "ecology", 
+res <- cr_works(query = "ecology",
   flq = c(query.author = 'Smith', query.title = 'cell'))
 }
 }
 \references{
 \url{https://github.com/CrossRef/rest-api-doc/blob/master/rest_api.md}
 }
-

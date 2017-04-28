@@ -24,8 +24,20 @@ test_that("cr_journals metadata works correctly", {
 test_that("cr_journals fails correctly", {
   skip_on_cran()
 
-  library('httr')
-  expect_error(cr_journals(query="peerj", limit=4, config=timeout(0.001)))
+  expect_error(cr_journals(query="peerj", limit=4, timeout_ms = 1))
+})
+
+test_that("cr_journals facet works", {
+  skip_on_cran()
+  
+  a <- cr_journals('1803-2427', works=TRUE, facet=TRUE, limit = 0)
+  
+  expect_is(a, "list")
+  expect_is(a$data, "data.frame")
+  expect_null(a$meta)
+  expect_is(a$facets, "list")
+  expect_is(a$facets$affiliation, "data.frame")
+  expect_is(a$facets$published, "data.frame")
 })
 
 
@@ -34,8 +46,8 @@ test_that("cr_journals warns correctly", {
 
   expect_warning(cr_journals(issn = c('blblbl', '1932-6203')),
                  regexp = "Resource not found", all = TRUE)
-  expect_equal(NROW(suppressWarnings(cr_journals(issn = c('blblbl', '1932-6203')))), 1)
-  expect_is(suppressWarnings(cr_journals(issn = c('blblbl', '1932-6203'))), "tbl_df")
+  expect_equal(NROW(suppressWarnings(cr_journals(issn = c('blblbl', '1932-6203')))$data), 1)
+  expect_is(suppressWarnings(cr_journals(issn = c('blblbl', '1932-6203'))), "list")
 })
 
 test_that("ISSNs that used to fail badly - should fail better now", {
@@ -43,7 +55,8 @@ test_that("ISSNs that used to fail badly - should fail better now", {
 
   expect_warning(cr_journals("0413-6597"), "Resource not found")
   expect_warning(cr_journals(c('1932-6203', '1803-2427', "0413-6597")), "Resource not found")
-  expect_equal(NROW(suppressMessages(suppressWarnings(cr_journals(c('1932-6203', '1803-2427', "0413-6597"))))), 2)
+  expect_equal(NROW(suppressMessages(suppressWarnings(cr_journals(c('1932-6203', '1803-2427', "0413-6597"))))$data), 2)
 })
 
-Sys.sleep(1)
+Sys.sleep(2)
+

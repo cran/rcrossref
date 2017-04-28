@@ -16,7 +16,7 @@ cr_members_(member_ids = NULL, query = NULL, filter = NULL,
   cursor_max = 5000, .progress = "none", parse = FALSE, flq = NULL, ...)
 }
 \arguments{
-\item{member_ids}{One or more member ids. See examples. ALternatively, 
+\item{member_ids}{One or more member ids. See examples. ALternatively,
 you can query for them using the query parameter.}
 
 \item{query}{Query terms}
@@ -39,9 +39,13 @@ deposited, indexed, or published.}
 
 \item{order}{(character) Sort order, one of 'asc' or 'desc'}
 
-\item{facet}{(logical) Include facet results. Default: \code{FALSE}}
+\item{facet}{(logical) Include facet results. Boolean or string with
+field to facet on. Valid fields are *, affiliation, funder-name,
+funder-doi, orcid, container-title, assertion, archive, update-type,
+issn, published, source, type-name, publisher-name, license,
+category-name, assertion-group. Default: \code{FALSE}}
 
-\item{works}{(logical) If TRUE, works returned as well, if not then not.}
+\item{works}{(logical) If \code{TRUE}, works returned as well, if not then not.}
 
 \item{cursor}{(character) Cursor character string to do deep paging. Default is None.
 Pass in '*' to start deep paging. Any combination of query, filters and facets may be
@@ -72,7 +76,7 @@ field query parameters are:
  first and given names
 }}
 
-\item{...}{Named parameters passed on to \code{\link[httr]{GET}}}
+\item{...}{Named parameters passed on to \code{\link[crul]{HttpClient}}}
 
 \item{parse}{(logical) Whether to output json \code{FALSE} or parse to
 list \code{TRUE}. Default: \code{FALSE}}
@@ -96,16 +100,16 @@ cr_members(query='hindawi')
 cr_members(query='ecology')
 
 # facets
-cr_members(member_ids=98, works=TRUE, facet=TRUE)
+cr_members(member_ids=98, works=TRUE, facet=TRUE, limit = 0)
+cr_members(member_ids=98, works=TRUE, facet="license:*", limit = 0)
 
 # curl options
-library('httr')
-cr_members(member_ids=98, config=verbose())
+cr_members(member_ids=98, verbose = TRUE)
 
 # Use the cursor for deep paging
-cr_members(member_ids=98, works = TRUE, cursor = "*", 
+cr_members(member_ids=98, works = TRUE, cursor = "*",
    cursor_max = 500, limit = 100)
-cr_members(member_ids=c(10, 98, 45), works = TRUE, cursor = "*", 
+cr_members(member_ids=c(10, 98, 45), works = TRUE, cursor = "*",
    cursor_max = 200, limit = 100)
 
 # data not found
@@ -121,7 +125,7 @@ cr_members_(member_ids = 98, works = TRUE, cursor = "*",
    cursor_max = 300, limit = 100)
 cr_members_(member_ids = 98, works = TRUE, cursor = "*",
    cursor_max = 300, limit = 100, parse=TRUE)
-   
+
 # field queries
 ## query.container-title
 cr_members(98, works = TRUE, flq = c(`query.container-title` = 'Ecology'))
@@ -130,4 +134,3 @@ cr_members(98, works = TRUE, flq = c(`query.container-title` = 'Ecology'))
 \references{
 \url{https://github.com/CrossRef/rest-api-doc/blob/master/rest_api.md}
 }
-
