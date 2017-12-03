@@ -238,10 +238,10 @@ hr {
 </code></pre>
 
 <pre><code>#&gt; [1] &quot;academy-of-management-review&quot;                   
-#&gt; [2] &quot;acm-sig-proceedings-long-author-list&quot;           
-#&gt; [3] &quot;acm-sig-proceedings&quot;                            
-#&gt; [4] &quot;acm-sigchi-proceedings-extended-abstract-format&quot;
-#&gt; [5] &quot;acm-sigchi-proceedings&quot;
+#&gt; [2] &quot;accident-analysis-and-prevention&quot;               
+#&gt; [3] &quot;acm-sig-proceedings-long-author-list&quot;           
+#&gt; [4] &quot;acm-sig-proceedings&quot;                            
+#&gt; [5] &quot;acm-sigchi-proceedings-extended-abstract-format&quot;
 </code></pre>
 
 <p><code>bibtex</code></p>
@@ -269,12 +269,6 @@ hr {
 <pre><code class="r">cr_cn(dois = &quot;10.6084/m9.figshare.97218&quot;, format = &quot;bibentry&quot;)
 </code></pre>
 
-<pre><code>#&gt; Boettiger C (2012). &quot;Regime shifts in ecology and evolution (PhD
-#&gt; Dissertation).&quot; doi: 10.6084/m9.figshare.97218 (URL:
-#&gt; http://doi.org/10.6084/m9.figshare.97218), &lt;URL:
-#&gt; https://doi.org/10.6084/m9.figshare.97218&gt;.
-</code></pre>
-
 <h2>Citation count</h2>
 
 <p>Citation count, using OpenURL</p>
@@ -282,7 +276,7 @@ hr {
 <pre><code class="r">cr_citation_count(doi=&quot;10.1371/journal.pone.0042793&quot;)
 </code></pre>
 
-<pre><code>#&gt; [1] 13
+<pre><code>#&gt; [1] 17
 </code></pre>
 
 <h2>Search Crossref metadata API</h2>
@@ -296,20 +290,21 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1             8          NSF           0             20
+#&gt; 1             9          NSF           0             20
 #&gt; 
 #&gt; $data
-#&gt; # A tibble: 8 × 6
+#&gt; # A tibble: 9 x 6
 #&gt;             id      location
 #&gt;          &lt;chr&gt;         &lt;chr&gt;
-#&gt; 1    100000179 United States
-#&gt; 2 501100000930     Australia
-#&gt; 3    100000001 United States
-#&gt; 4    100003187 United States
-#&gt; 5    100008367       Denmark
-#&gt; 6 501100004190        Norway
-#&gt; 7    100006445 United States
-#&gt; 8 501100001809         China
+#&gt; 1    100006445 United States
+#&gt; 2    100003187 United States
+#&gt; 3 501100008982     Sri Lanka
+#&gt; 4    100008367       Denmark
+#&gt; 5 501100004190        Norway
+#&gt; 6    100000179 United States
+#&gt; 7 501100000930     Australia
+#&gt; 8    100000001 United States
+#&gt; 9 501100001809         China
 #&gt; # ... with 4 more variables: name &lt;chr&gt;, alt.names &lt;chr&gt;, uri &lt;chr&gt;,
 #&gt; #   tokens &lt;chr&gt;
 #&gt; 
@@ -330,7 +325,7 @@ hr {
 #&gt; [1] &quot;crossref&quot;
 #&gt; 
 #&gt; $agency$label
-#&gt; [1] &quot;CrossRef&quot;
+#&gt; [1] &quot;Crossref&quot;
 </code></pre>
 
 <h3>Search works (i.e., articles, books, etc.)</h3>
@@ -340,21 +335,19 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1        689036           NA           0              1
+#&gt; 1       1078354           NA           0              1
 #&gt; 
 #&gt; $data
-#&gt; # A tibble: 1 × 29
-#&gt;   alternative.id               container.title    created  deposited
-#&gt;            &lt;chr&gt;                         &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;
-#&gt; 1           1142 Regional Environmental Change 2017-03-29 2017-03-29
-#&gt; # ... with 25 more variables: DOI &lt;chr&gt;, funder &lt;list&gt;, indexed &lt;chr&gt;,
-#&gt; #   ISBN &lt;chr&gt;, ISSN &lt;chr&gt;, issued &lt;chr&gt;, license_date &lt;chr&gt;,
-#&gt; #   license_URL &lt;chr&gt;, license_delay.in.days &lt;chr&gt;,
-#&gt; #   license_content.version &lt;chr&gt;, link &lt;list&gt;, member &lt;chr&gt;,
-#&gt; #   prefix &lt;chr&gt;, publisher &lt;chr&gt;, reference.count &lt;chr&gt;, score &lt;chr&gt;,
-#&gt; #   source &lt;chr&gt;, subject &lt;chr&gt;, title &lt;chr&gt;, type &lt;chr&gt;,
-#&gt; #   update.policy &lt;chr&gt;, URL &lt;chr&gt;, assertion &lt;list&gt;, author &lt;list&gt;,
-#&gt; #   `clinical-trial-number` &lt;list&gt;
+#&gt; # A tibble: 1 x 26
+#&gt;                    container.title    created  deposited
+#&gt;                              &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;
+#&gt; 1 Journal of Materials Chemistry B 2015-01-13 2017-11-12
+#&gt; # ... with 23 more variables: DOI &lt;chr&gt;, indexed &lt;chr&gt;, ISSN &lt;chr&gt;,
+#&gt; #   issue &lt;chr&gt;, issued &lt;chr&gt;, member &lt;chr&gt;, page &lt;chr&gt;, prefix &lt;chr&gt;,
+#&gt; #   publisher &lt;chr&gt;, reference.count &lt;chr&gt;, score &lt;chr&gt;, source &lt;chr&gt;,
+#&gt; #   subject &lt;chr&gt;, title &lt;chr&gt;, type &lt;chr&gt;, update.policy &lt;chr&gt;,
+#&gt; #   URL &lt;chr&gt;, volume &lt;chr&gt;, abstract &lt;chr&gt;, assertion &lt;list&gt;,
+#&gt; #   author &lt;list&gt;, funder &lt;list&gt;, link &lt;list&gt;
 #&gt; 
 #&gt; $facets
 #&gt; NULL
@@ -366,14 +359,12 @@ hr {
 </code></pre>
 
 <pre><code>#&gt; $data
-#&gt; # A tibble: 2 × 16
-#&gt;   alternative.id container.title created deposited funder indexed  ISBN
-#&gt;            &lt;chr&gt;           &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt; &lt;list&gt;   &lt;chr&gt; &lt;chr&gt;
-#&gt; 1                                                  &lt;NULL&gt;              
-#&gt; 2                                                  &lt;NULL&gt;              
-#&gt; # ... with 9 more variables: ISSN &lt;chr&gt;, issued &lt;chr&gt;, link &lt;list&gt;,
-#&gt; #   publisher &lt;chr&gt;, subject &lt;chr&gt;, title &lt;chr&gt;, assertion &lt;list&gt;,
-#&gt; #   author &lt;list&gt;, `clinical-trial-number` &lt;list&gt;
+#&gt; # A tibble: 2 x 3
+#&gt;                  ISSN                      publisher
+#&gt;                 &lt;chr&gt;                          &lt;chr&gt;
+#&gt; 1 1805-4196,1803-2427    De Gruyter Open Sp. z o.o. 
+#&gt; 2           2326-4225 American Scientific Publishers
+#&gt; # ... with 1 more variables: title &lt;chr&gt;
 #&gt; 
 #&gt; $facets
 #&gt; NULL
@@ -386,30 +377,23 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1            17     elsevier           0             20
+#&gt; 1            22     elsevier           0             20
 #&gt; 
 #&gt; $data
-#&gt; # A tibble: 17 × 2
-#&gt;                                                                            URL
-#&gt;                                                                          &lt;chr&gt;
-#&gt; 1                            http://creativecommons.org/licenses/by-nc-nd/3.0/
-#&gt; 2                            http://creativecommons.org/licenses/by-nc-nd/4.0/
-#&gt; 3                                  http://creativecommons.org/licenses/by/3.0/
-#&gt; 4                                   http://creativecommons.org/licenses/by/4.0
-#&gt; 5                                  http://creativecommons.org/licenses/by/4.0/
-#&gt; 6                                   http://doi.wiley.com/10.1002/tdm_license_1
-#&gt; 7                                 http://doi.wiley.com/10.1002/tdm_license_1.1
-#&gt; 8                       http://journals.iucr.org/services/copyrightpolicy.html
-#&gt; 9                   http://journals.iucr.org/services/copyrightpolicy.html#TDM
-#&gt; 10                           http://onlinelibrary.wiley.com/termsAndConditions
-#&gt; 11        http://www.acm.org/publications/policies/copyright_policy#Background
-#&gt; 12     http://www.bioone.org/page/resources/researchers/rights_and_permissions
-#&gt; 13                        http://www.elsevier.com/open-access/userlicense/1.0/
-#&gt; 14                                http://www.elsevier.com/tdm/userlicense/1.0/
-#&gt; 15                                      http://www.emeraldinsight.com/page/tdm
-#&gt; 16                                                 http://www.springer.com/tdm
-#&gt; 17 © 2012, Elsevier Inc., All Rights Reserved. Figure 8, part (B) (images of H
-#&gt; # ... with 1 more variables: work.count &lt;int&gt;
+#&gt; # A tibble: 22 x 2
+#&gt;                                                         URL work.count
+#&gt;                                                       &lt;chr&gt;      &lt;int&gt;
+#&gt;  1 http://aspb.org/publications/aspb-journals/open-articles          1
+#&gt;  2        http://creativecommons.org/licenses/by-nc-nd/3.0/         12
+#&gt;  3        http://creativecommons.org/licenses/by-nc-nd/4.0/          7
+#&gt;  4           http://creativecommons.org/licenses/by-nc/4.0/          1
+#&gt;  5              http://creativecommons.org/licenses/by/3.0/          1
+#&gt;  6               http://creativecommons.org/licenses/by/4.0          1
+#&gt;  7              http://creativecommons.org/licenses/by/4.0/          1
+#&gt;  8               http://doi.wiley.com/10.1002/tdm_license_1        157
+#&gt;  9             http://doi.wiley.com/10.1002/tdm_license_1.1       2166
+#&gt; 10   http://journals.iucr.org/services/copyrightpolicy.html         10
+#&gt; # ... with 12 more rows
 </code></pre>
 
 <h3>Search based on DOI prefixes</h3>
@@ -448,15 +432,15 @@ hr {
 #&gt; 1            18      ecology           0              5
 #&gt; 
 #&gt; $data
-#&gt; # A tibble: 5 × 48
-#&gt;      id
-#&gt;   &lt;int&gt;
-#&gt; 1  7052
-#&gt; 2  6933
-#&gt; 3  7278
-#&gt; 4  7745
-#&gt; 5  9167
-#&gt; # ... with 47 more variables: primary_name &lt;chr&gt;, location &lt;chr&gt;,
+#&gt; # A tibble: 5 x 48
+#&gt;      id                            primary_name
+#&gt;   &lt;int&gt;                                   &lt;chr&gt;
+#&gt; 1   336   Japanese Society of Microbial Ecology
+#&gt; 2  1950               Journal of Vector Ecology
+#&gt; 3  2080   The Japan Society of Tropical Ecology
+#&gt; 4  2467          Ideas in Ecology and Evolution
+#&gt; 5  3732 Japan Association for Landscape Ecology
+#&gt; # ... with 46 more variables: location &lt;chr&gt;,
 #&gt; #   last_status_check_time &lt;date&gt;, total.dois &lt;chr&gt;, current.dois &lt;chr&gt;,
 #&gt; #   backfile.dois &lt;chr&gt;, prefixes &lt;chr&gt;,
 #&gt; #   coverge.affiliations.current &lt;chr&gt;, coverge.funders.backfile &lt;chr&gt;,
@@ -502,16 +486,11 @@ hr {
 <pre><code class="r">cr_r()
 </code></pre>
 
-<pre><code>#&gt;  [1] &quot;10.1016/j.chemosphere.2012.06.036&quot;
-#&gt;  [2] &quot;10.1117/12.2249178&quot;               
-#&gt;  [3] &quot;10.1111/j.1469-8137.2004.01086.x&quot; 
-#&gt;  [4] &quot;10.1016/j.orthtr.2014.07.013&quot;     
-#&gt;  [5] &quot;10.1086/633704&quot;                   
-#&gt;  [6] &quot;10.1017/s0020860400090355&quot;        
-#&gt;  [7] &quot;10.1111/coep.12229&quot;               
-#&gt;  [8] &quot;10.1524/ract.1967.8.4.214&quot;        
-#&gt;  [9] &quot;10.1016/s0040-4020(01)98752-6&quot;    
-#&gt; [10] &quot;10.1021/nl200189w&quot;
+<pre><code>#&gt;  [1] &quot;10.1097/nt.0000000000000083&quot;   &quot;10.3796/ksft.2016.52.1.072&quot;   
+#&gt;  [3] &quot;10.1016/j.jtho.2016.11.645&quot;    &quot;10.1038/sj.bjp.0705959&quot;       
+#&gt;  [5] &quot;10.1016/s0735-1097(04)90810-8&quot; &quot;10.1007/bf01048109&quot;           
+#&gt;  [7] &quot;10.2172/6478328&quot;               &quot;10.1601/ex.6391&quot;              
+#&gt;  [9] &quot;10.1103/physreve.64.011702&quot;    &quot;10.1039/c6ra11800c&quot;
 </code></pre>
 
 <p>You can pass in the number of DOIs you want back (default is 10)</p>
@@ -519,8 +498,7 @@ hr {
 <pre><code class="r">cr_r(2)
 </code></pre>
 
-<pre><code>#&gt; [1] &quot;10.1163/ej.9789024727186.123-268.6&quot;
-#&gt; [2] &quot;10.1016/0044-8486(76)90026-0&quot;
+<pre><code>#&gt; [1] &quot;10.7554/elife.08177.003&quot; &quot;10.1039/b003410j&quot;
 </code></pre>
 
 </body>
