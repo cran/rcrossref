@@ -1,8 +1,10 @@
 #' Search CrossRef works (articles)
 #'
 #' @export
-#'
-#' @param dois Search by a single DOI or many DOIs.
+#' @family crossref
+#' @param dois Search by a single DOI or many DOIs.  Note that using this 
+#' parameter at the same time as the `query`, `limit`, `select` or `flq` 
+#' parameter will result in an error.
 #' @template args
 #' @template moreargs
 #' @template cursor_args
@@ -137,10 +139,10 @@
     df <- tbl_df(bind_rows(res))
     #exclude rows with empty DOI value until CrossRef API supports
     #input validation
-    if (nrow(df[df$DOI == "", ]) > 0) {
+    if (nrow(df[df$doi == "", ]) > 0) {
       warning("only data with valid CrossRef DOIs returned",  call. = FALSE)
     }
-    df <- df[!df$DOI == "", ]
+    df <- df[!df$doi == "", ]
     list(meta = NULL, data = df, facets = NULL)
   } else {
     tmp <- cr_get_cursor(dois, args = args, cursor = cursor,
@@ -207,6 +209,7 @@ cr_get_cursor_ <- function(x, args, cursor, cursor_max, parse, ...) {
 }
 
 parse_meta <- function(x) {
+  if (is.null(x$message)) return(data.frame(NULL))
   tmp <- x$message[ !names(x$message) %in% c('facets','items') ]
   st <- tmp$query$`search-terms`
   data.frame(total_results = tmp$`total-results`,
@@ -257,7 +260,6 @@ parse_works <- function(zzz){
           sprintf("%02d",
                   unlist(y[[which]]$`date-parts`)), collapse = "-")
       ),
-      license = list(parse_license(y[[which]])),
       member = list(y[[which]]),
       page = list(y[[which]]),
       prefix = list(y[[which]]),
@@ -291,18 +293,17 @@ parse_works <- function(zzz){
     NULL
   } else {
     tmp <- unlist(lapply(keys, manip, y = zzz))
-    #tmp[vapply(tmp, function(z) nchar(z) == 0 || is.na(z), TRUE)] <- NULL
     out_tmp <- data.frame(
       as.list(Filter(function(x) nchar(x) > 0, tmp)), 
       stringsAsFactors = FALSE)
-    # out_tmp <- data.frame(as.list(unlist(lapply(keys, manip, y = zzz))),
-    #                       stringsAsFactors = FALSE)
     out_tmp$assertion <- list(parse_todf(zzz$assertion)) %||% NULL
     out_tmp$author <- list(parse_todf(zzz$author)) %||% NULL
     out_tmp$funder <- list(parse_todf(zzz$funder)) %||% NULL
     out_tmp$link <- list(parse_todf(zzz$link)) %||% NULL
+    out_tmp$license <- list(tbl_df(bind_rows(lapply(zzz$license, parse_license)))) %||% NULL
     out_tmp$`clinical-trial-number` <- list(parse_todf(zzz$`clinical-trial-number`)) %||% NULL
     out_tmp <- Filter(function(x) length(unlist(x)) > 0, out_tmp)
+    names(out_tmp) <- tolower(names(out_tmp))
     return(out_tmp)
   }
 }
@@ -318,8 +319,8 @@ parse_license <- function(x){
   if (is.null(x)) {
     NULL
   } else {
-    date <- make_date(x[[1]]$start$`date-parts`)
-    data.frame(date = date, x[[1]][!names(x[[1]]) == "start"],
+    date <- make_date(x$start$`date-parts`)
+    data.frame(date = date, x[!names(x) == "start"],
                stringsAsFactors = FALSE)
   }
 }

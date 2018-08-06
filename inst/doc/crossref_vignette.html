@@ -276,7 +276,7 @@ hr {
 <pre><code class="r">cr_citation_count(doi=&quot;10.1371/journal.pone.0042793&quot;)
 </code></pre>
 
-<pre><code>#&gt; [1] 17
+<pre><code>#&gt; [1] 21
 </code></pre>
 
 <h2>Search Crossref metadata API</h2>
@@ -290,23 +290,22 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1             9          NSF           0             20
+#&gt; 1            10          NSF           0             20
 #&gt; 
 #&gt; $data
-#&gt; # A tibble: 9 x 6
-#&gt;             id      location
-#&gt;          &lt;chr&gt;         &lt;chr&gt;
-#&gt; 1    100006445 United States
-#&gt; 2    100003187 United States
-#&gt; 3 501100008982     Sri Lanka
-#&gt; 4    100008367       Denmark
-#&gt; 5 501100004190        Norway
-#&gt; 6    100000179 United States
-#&gt; 7 501100000930     Australia
-#&gt; 8    100000001 United States
-#&gt; 9 501100001809         China
-#&gt; # ... with 4 more variables: name &lt;chr&gt;, alt.names &lt;chr&gt;, uri &lt;chr&gt;,
-#&gt; #   tokens &lt;chr&gt;
+#&gt; # A tibble: 10 x 6
+#&gt;    id     location  name          alt.names        uri       tokens       
+#&gt;    &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;         &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;        
+#&gt;  1 50110… Norway    Norsk Sykepl… NSF, Norwegian … http://d… norsk, sykep…
+#&gt;  2 10000… United S… Center for H… CHM, NSF, Unive… http://d… center, for,…
+#&gt;  3 10000… United S… National Sle… NSF              http://d… national, sl…
+#&gt;  4 50110… Sri Lanka National Sci… National Scienc… http://d… national, sc…
+#&gt;  5 10000… Denmark   Statens Natu… Danish National… http://d… statens, nat…
+#&gt;  6 10000… United S… Office of th… NSF Office of t… http://d… office, of, …
+#&gt;  7 50110… Australia National Str… NSF              http://d… national, st…
+#&gt;  8 10000… United S… National Sci… NSF              http://d… national, sc…
+#&gt;  9 50110… China     National Nat… NSFC-Yunnan Joi… http://d… national, na…
+#&gt; 10 50110… China     National Nat… Natural Science… http://d… national, na…
 #&gt; 
 #&gt; $facets
 #&gt; NULL
@@ -335,19 +334,18 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1       1078354           NA           0              1
+#&gt; 1       1614119           NA           0              1
 #&gt; 
 #&gt; $data
 #&gt; # A tibble: 1 x 26
-#&gt;                    container.title    created  deposited
-#&gt;                              &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;
-#&gt; 1 Journal of Materials Chemistry B 2015-01-13 2017-11-12
-#&gt; # ... with 23 more variables: DOI &lt;chr&gt;, indexed &lt;chr&gt;, ISSN &lt;chr&gt;,
-#&gt; #   issue &lt;chr&gt;, issued &lt;chr&gt;, member &lt;chr&gt;, page &lt;chr&gt;, prefix &lt;chr&gt;,
-#&gt; #   publisher &lt;chr&gt;, reference.count &lt;chr&gt;, score &lt;chr&gt;, source &lt;chr&gt;,
-#&gt; #   subject &lt;chr&gt;, title &lt;chr&gt;, type &lt;chr&gt;, update.policy &lt;chr&gt;,
-#&gt; #   URL &lt;chr&gt;, volume &lt;chr&gt;, abstract &lt;chr&gt;, assertion &lt;list&gt;,
-#&gt; #   author &lt;list&gt;, funder &lt;list&gt;, link &lt;list&gt;
+#&gt;   alternative.id container.title created deposited doi   indexed issn 
+#&gt;   &lt;chr&gt;          &lt;chr&gt;           &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;
+#&gt; 1 S200529011400… Journal of Acu… 2014-0… 2017-06-… 10.1… 2018-0… 2005…
+#&gt; # ... with 19 more variables: issue &lt;chr&gt;, issued &lt;chr&gt;, member &lt;chr&gt;,
+#&gt; #   page &lt;chr&gt;, prefix &lt;chr&gt;, publisher &lt;chr&gt;, reference.count &lt;chr&gt;,
+#&gt; #   score &lt;chr&gt;, source &lt;chr&gt;, title &lt;chr&gt;, type &lt;chr&gt;,
+#&gt; #   update.policy &lt;chr&gt;, url &lt;chr&gt;, volume &lt;chr&gt;, assertion &lt;list&gt;,
+#&gt; #   author &lt;list&gt;, funder &lt;list&gt;, link &lt;list&gt;, license &lt;list&gt;
 #&gt; 
 #&gt; $facets
 #&gt; NULL
@@ -359,12 +357,41 @@ hr {
 </code></pre>
 
 <pre><code>#&gt; $data
-#&gt; # A tibble: 2 x 3
-#&gt;                  ISSN                      publisher
-#&gt;                 &lt;chr&gt;                          &lt;chr&gt;
-#&gt; 1 1805-4196,1803-2427    De Gruyter Open Sp. z o.o. 
-#&gt; 2           2326-4225 American Scientific Publishers
-#&gt; # ... with 1 more variables: title &lt;chr&gt;
+#&gt; # A tibble: 2 x 53
+#&gt;   title publisher issn  last_status_che… deposits_abstra… deposits_orcids…
+#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;date&gt;           &lt;lgl&gt;            &lt;lgl&gt;           
+#&gt; 1 Jour… &quot;De Gruy… 1805… 2018-08-06       TRUE             FALSE           
+#&gt; 2 Jour… American… 2326… 2018-08-06       FALSE            FALSE           
+#&gt; # ... with 47 more variables: deposits &lt;lgl&gt;,
+#&gt; #   deposits_affiliations_backfile &lt;lgl&gt;,
+#&gt; #   deposits_update_policies_backfile &lt;lgl&gt;,
+#&gt; #   deposits_similarity_checking_backfile &lt;lgl&gt;,
+#&gt; #   deposits_award_numbers_current &lt;lgl&gt;,
+#&gt; #   deposits_resource_links_current &lt;lgl&gt;, deposits_articles &lt;lgl&gt;,
+#&gt; #   deposits_affiliations_current &lt;lgl&gt;, deposits_funders_current &lt;lgl&gt;,
+#&gt; #   deposits_references_backfile &lt;lgl&gt;, deposits_abstracts_backfile &lt;lgl&gt;,
+#&gt; #   deposits_licenses_backfile &lt;lgl&gt;,
+#&gt; #   deposits_award_numbers_backfile &lt;lgl&gt;,
+#&gt; #   deposits_open_references_backfile &lt;lgl&gt;,
+#&gt; #   deposits_open_references_current &lt;lgl&gt;,
+#&gt; #   deposits_references_current &lt;lgl&gt;,
+#&gt; #   deposits_resource_links_backfile &lt;lgl&gt;,
+#&gt; #   deposits_orcids_backfile &lt;lgl&gt;, deposits_funders_backfile &lt;lgl&gt;,
+#&gt; #   deposits_update_policies_current &lt;lgl&gt;,
+#&gt; #   deposits_similarity_checking_current &lt;lgl&gt;,
+#&gt; #   deposits_licenses_current &lt;lgl&gt;, affiliations_current &lt;dbl&gt;,
+#&gt; #   similarity_checking_current &lt;dbl&gt;, funders_backfile &lt;dbl&gt;,
+#&gt; #   licenses_backfile &lt;dbl&gt;, funders_current &lt;dbl&gt;,
+#&gt; #   affiliations_backfile &lt;dbl&gt;, resource_links_backfile &lt;dbl&gt;,
+#&gt; #   orcids_backfile &lt;dbl&gt;, update_policies_current &lt;dbl&gt;,
+#&gt; #   open_references_backfile &lt;dbl&gt;, orcids_current &lt;dbl&gt;,
+#&gt; #   similarity_checking_backfile &lt;dbl&gt;, references_backfile &lt;dbl&gt;,
+#&gt; #   award_numbers_backfile &lt;dbl&gt;, update_policies_backfile &lt;dbl&gt;,
+#&gt; #   licenses_current &lt;dbl&gt;, award_numbers_current &lt;dbl&gt;,
+#&gt; #   abstracts_backfile &lt;dbl&gt;, resource_links_current &lt;dbl&gt;,
+#&gt; #   abstracts_current &lt;dbl&gt;, open_references_current &lt;dbl&gt;,
+#&gt; #   references_current &lt;dbl&gt;, total_dois &lt;int&gt;, current_dois &lt;int&gt;,
+#&gt; #   backfile_dois &lt;int&gt;
 #&gt; 
 #&gt; $facets
 #&gt; NULL
@@ -377,23 +404,23 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1            22     elsevier           0             20
+#&gt; 1            25     elsevier           0             20
 #&gt; 
 #&gt; $data
-#&gt; # A tibble: 22 x 2
-#&gt;                                                         URL work.count
-#&gt;                                                       &lt;chr&gt;      &lt;int&gt;
+#&gt; # A tibble: 25 x 2
+#&gt;    URL                                                      work.count
+#&gt;    &lt;chr&gt;                                                         &lt;int&gt;
 #&gt;  1 http://aspb.org/publications/aspb-journals/open-articles          1
-#&gt;  2        http://creativecommons.org/licenses/by-nc-nd/3.0/         12
-#&gt;  3        http://creativecommons.org/licenses/by-nc-nd/4.0/          7
-#&gt;  4           http://creativecommons.org/licenses/by-nc/4.0/          1
-#&gt;  5              http://creativecommons.org/licenses/by/3.0/          1
-#&gt;  6               http://creativecommons.org/licenses/by/4.0          1
-#&gt;  7              http://creativecommons.org/licenses/by/4.0/          1
-#&gt;  8               http://doi.wiley.com/10.1002/tdm_license_1        157
-#&gt;  9             http://doi.wiley.com/10.1002/tdm_license_1.1       2166
-#&gt; 10   http://journals.iucr.org/services/copyrightpolicy.html         10
-#&gt; # ... with 12 more rows
+#&gt;  2 http://creativecommons.org/licenses/by-nc-nd/3.0/                13
+#&gt;  3 http://creativecommons.org/licenses/by-nc-nd/4.0/                 8
+#&gt;  4 http://creativecommons.org/licenses/by-nc/4.0/                    2
+#&gt;  5 http://creativecommons.org/licenses/by/3.0/                       1
+#&gt;  6 http://creativecommons.org/licenses/by/4.0                        2
+#&gt;  7 http://creativecommons.org/licenses/by/4.0/                       2
+#&gt;  8 http://doi.wiley.com/10.1002/tdm_license_1                      157
+#&gt;  9 http://doi.wiley.com/10.1002/tdm_license_1.1                   2175
+#&gt; 10 http://journals.iucr.org/services/copyrightpolicy.html           10
+#&gt; # ... with 15 more rows
 </code></pre>
 
 <h3>Search based on DOI prefixes</h3>
@@ -408,7 +435,7 @@ hr {
 #&gt;                               member                             name
 #&gt; 1   http://id.crossref.org/member/78                      Elsevier BV
 #&gt; 2  http://id.crossref.org/member/340 Public Library of Science (PLoS)
-#&gt; 3  http://id.crossref.org/member/297                  Springer Nature
+#&gt; 3  http://id.crossref.org/member/297     Springer Nature America, Inc
 #&gt; 4 http://id.crossref.org/member/1989             Co-Action Publishing
 #&gt; 5  http://id.crossref.org/member/286    Oxford University Press (OUP)
 #&gt;                                  prefix
@@ -432,33 +459,36 @@ hr {
 #&gt; 1            18      ecology           0              5
 #&gt; 
 #&gt; $data
-#&gt; # A tibble: 5 x 48
-#&gt;      id                            primary_name
-#&gt;   &lt;int&gt;                                   &lt;chr&gt;
-#&gt; 1   336   Japanese Society of Microbial Ecology
-#&gt; 2  1950               Journal of Vector Ecology
-#&gt; 3  2080   The Japan Society of Tropical Ecology
-#&gt; 4  2467          Ideas in Ecology and Evolution
-#&gt; 5  3732 Japan Association for Landscape Ecology
-#&gt; # ... with 46 more variables: location &lt;chr&gt;,
-#&gt; #   last_status_check_time &lt;date&gt;, total.dois &lt;chr&gt;, current.dois &lt;chr&gt;,
-#&gt; #   backfile.dois &lt;chr&gt;, prefixes &lt;chr&gt;,
-#&gt; #   coverge.affiliations.current &lt;chr&gt;, coverge.funders.backfile &lt;chr&gt;,
-#&gt; #   coverge.licenses.backfile &lt;chr&gt;, coverge.funders.current &lt;chr&gt;,
-#&gt; #   coverge.affiliations.backfile &lt;chr&gt;,
+#&gt; # A tibble: 5 x 56
+#&gt;      id primary_name location last_status_che… total.dois current.dois
+#&gt;   &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;    &lt;date&gt;           &lt;chr&gt;      &lt;chr&gt;       
+#&gt; 1   336 Japanese So… 5-3 Yon… 2018-08-06       1167       157         
+#&gt; 2  1950 Journal of … Suite 8… 2018-08-06       27         0           
+#&gt; 3  2080 The Japan S… 5-3 Yon… 2018-08-06       685        35          
+#&gt; 4  2151 Ecology and… 5-3 Yon… 2018-08-06       385        53          
+#&gt; 5  2169 Italian Soc… Diparti… 2018-08-06       1217       367         
+#&gt; # ... with 50 more variables: backfile.dois &lt;chr&gt;, prefixes &lt;chr&gt;,
+#&gt; #   coverge.affiliations.current &lt;chr&gt;,
+#&gt; #   coverge.similarity.checking.current &lt;chr&gt;,
+#&gt; #   coverge.funders.backfile &lt;chr&gt;, coverge.licenses.backfile &lt;chr&gt;,
+#&gt; #   coverge.funders.current &lt;chr&gt;, coverge.affiliations.backfile &lt;chr&gt;,
 #&gt; #   coverge.resource.links.backfile &lt;chr&gt;, coverge.orcids.backfile &lt;chr&gt;,
-#&gt; #   coverge.update.policies.current &lt;chr&gt;, coverge.orcids.current &lt;chr&gt;,
+#&gt; #   coverge.update.policies.current &lt;chr&gt;,
+#&gt; #   coverge.open.references.backfile &lt;chr&gt;, coverge.orcids.current &lt;chr&gt;,
+#&gt; #   coverge.similarity.checking.backfile &lt;chr&gt;,
 #&gt; #   coverge.references.backfile &lt;chr&gt;,
 #&gt; #   coverge.award.numbers.backfile &lt;chr&gt;,
 #&gt; #   coverge.update.policies.backfile &lt;chr&gt;,
 #&gt; #   coverge.licenses.current &lt;chr&gt;, coverge.award.numbers.current &lt;chr&gt;,
 #&gt; #   coverge.abstracts.backfile &lt;chr&gt;,
 #&gt; #   coverge.resource.links.current &lt;chr&gt;, coverge.abstracts.current &lt;chr&gt;,
+#&gt; #   coverge.open.references.current &lt;chr&gt;,
 #&gt; #   coverge.references.current &lt;chr&gt;,
 #&gt; #   flags.deposits.abstracts.current &lt;chr&gt;,
 #&gt; #   flags.deposits.orcids.current &lt;chr&gt;, flags.deposits &lt;chr&gt;,
 #&gt; #   flags.deposits.affiliations.backfile &lt;chr&gt;,
 #&gt; #   flags.deposits.update.policies.backfile &lt;chr&gt;,
+#&gt; #   flags.deposits.similarity.checking.backfile &lt;chr&gt;,
 #&gt; #   flags.deposits.award.numbers.current &lt;chr&gt;,
 #&gt; #   flags.deposits.resource.links.current &lt;chr&gt;,
 #&gt; #   flags.deposits.articles &lt;chr&gt;,
@@ -468,11 +498,14 @@ hr {
 #&gt; #   flags.deposits.abstracts.backfile &lt;chr&gt;,
 #&gt; #   flags.deposits.licenses.backfile &lt;chr&gt;,
 #&gt; #   flags.deposits.award.numbers.backfile &lt;chr&gt;,
+#&gt; #   flags.deposits.open.references.backfile &lt;chr&gt;,
+#&gt; #   flags.deposits.open.references.current &lt;chr&gt;,
 #&gt; #   flags.deposits.references.current &lt;chr&gt;,
 #&gt; #   flags.deposits.resource.links.backfile &lt;chr&gt;,
 #&gt; #   flags.deposits.orcids.backfile &lt;chr&gt;,
 #&gt; #   flags.deposits.funders.backfile &lt;chr&gt;,
 #&gt; #   flags.deposits.update.policies.current &lt;chr&gt;,
+#&gt; #   flags.deposits.similarity.checking.current &lt;chr&gt;,
 #&gt; #   flags.deposits.licenses.current &lt;chr&gt;, names &lt;chr&gt;, tokens &lt;chr&gt;
 #&gt; 
 #&gt; $facets
@@ -486,11 +519,16 @@ hr {
 <pre><code class="r">cr_r()
 </code></pre>
 
-<pre><code>#&gt;  [1] &quot;10.1097/nt.0000000000000083&quot;   &quot;10.3796/ksft.2016.52.1.072&quot;   
-#&gt;  [3] &quot;10.1016/j.jtho.2016.11.645&quot;    &quot;10.1038/sj.bjp.0705959&quot;       
-#&gt;  [5] &quot;10.1016/s0735-1097(04)90810-8&quot; &quot;10.1007/bf01048109&quot;           
-#&gt;  [7] &quot;10.2172/6478328&quot;               &quot;10.1601/ex.6391&quot;              
-#&gt;  [9] &quot;10.1103/physreve.64.011702&quot;    &quot;10.1039/c6ra11800c&quot;
+<pre><code>#&gt;  [1] &quot;10.1016/1359-6454(95)00161-3&quot;              
+#&gt;  [2] &quot;10.1016/s0893-9659(99)00209-8&quot;             
+#&gt;  [3] &quot;10.1007/978-3-319-13449-9_8&quot;               
+#&gt;  [4] &quot;10.7788/daem.1987.43.1.354&quot;                
+#&gt;  [5] &quot;10.1007/978-3-476-05468-5_19&quot;              
+#&gt;  [6] &quot;10.1016/s0026-0657(01)80575-0&quot;             
+#&gt;  [7] &quot;10.2307/259363&quot;                            
+#&gt;  [8] &quot;10.4028/www.scientific.net/amm.519-520.294&quot;
+#&gt;  [9] &quot;10.1111/ajco.12021_1&quot;                      
+#&gt; [10] &quot;10.3384/diss.diva-132634&quot;
 </code></pre>
 
 <p>You can pass in the number of DOIs you want back (default is 10)</p>
@@ -498,7 +536,7 @@ hr {
 <pre><code class="r">cr_r(2)
 </code></pre>
 
-<pre><code>#&gt; [1] &quot;10.7554/elife.08177.003&quot; &quot;10.1039/b003410j&quot;
+<pre><code>#&gt; [1] &quot;10.1016/j.ijhydene.2009.12.070&quot; &quot;10.1177/097492840105700301&quot;
 </code></pre>
 
 </body>

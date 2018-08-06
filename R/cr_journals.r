@@ -1,7 +1,7 @@
 #' Search CrossRef journals
 #'
 #' @export
-#'
+#' @family crossref
 #' @param issn (character) One or more ISSN's. Format: XXXX-XXXX.
 #' @template args
 #' @template moreargs
@@ -108,22 +108,36 @@
       facets <- if (all(vapply(facets, is.null, logical(1)))) NULL else facets
       list(data = df, facets = facets)
     } else {
-      res <- lapply(res, "[[", "message")
+      res2 <- lapply(res, "[[", "message")
       # remove NULLs
-      res <- cr_compact(res)
-      tmp <- lapply(res, parse_works)
-      df <- tbl_df(bind_rows(tmp))
+      res2 <- cr_compact(res2)
+
+      if (works) {
+        tmp <- lapply(res2, function(z) bind_rows(lapply(z$items, parse_works)))
+        df <- tbl_df(bind_rows(tmp))
+      } else {
+        dat <- lapply(res2, function(z) if (is.null(z)) NULL else parse_journal(z))
+        df <- tbl_df(bind_rows(dat))
+      }
+      
       #exclude rows with empty ISSN value until CrossRef API
       #supports input validation
-      if (nrow(df[df$ISSN == "", ]) > 0) {
-        warning("only data with valid ISSN returned",  call. = FALSE)
+      if (NROW(df[df$issn == "", ]) > 0) {
+        warning("only data with valid issn returned",  call. = FALSE)
       }
-      df <- df[!df$ISSN == "", ]
-      facets <- stats::setNames(
-        lapply(res, function(x) parse_facets(x$facets)),
-        vapply(res, function(z) z[['ISSN']][[1]], "")
-      )
-      facets <- if (all(vapply(facets, is.null, logical(1)))) NULL else facets
+      df <- df[!df$issn == "", ]
+
+      # facets
+      facets <- lapply(res2, function(x) parse_facets(x$facets))
+      facets <- if (all(vapply(facets, is.null, logical(1)))) {
+        NULL
+      } else {
+        stats::setNames(facets,
+          vapply(res2, function(z) {
+            if ("issn" %in% names(z)) z[['issn']][[1]] else z$items[[1]]$issn[[1]]
+          }, "")
+        )
+      }
       list(data = df, facets = facets)
     }
   } else {

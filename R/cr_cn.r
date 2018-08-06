@@ -4,15 +4,18 @@
 #'
 #' @param dois Search by a single DOI or many DOIs.
 #' @param format Name of the format. One of "rdf-xml", "turtle",
-#'   "citeproc-json", "citeproc-json-ish", "text", "ris", "bibtex" (default),
-#'   "crossref-xml", "datacite-xml","bibentry", or "crossref-tdm". The format
-#'   "citeproc-json-ish" is a format that is not quite proper citeproc-json
+#' "citeproc-json", "citeproc-json-ish", "text", "ris", "bibtex" (default),
+#' "crossref-xml", "datacite-xml","bibentry", or "crossref-tdm". The format
+#' "citeproc-json-ish" is a format that is not quite proper citeproc-json
 #' @param style a CSL style (for text format only). See [get_styles()]
-#'   for options. Default: apa. If there's a style that CrossRef doesn't support
-#'   you'll get a  `(500) Internal Server Error`
+#' for options. Default: apa. If there's a style that CrossRef doesn't support
+#' you'll get a  `(500) Internal Server Error`
 #' @param locale Lansguage locale. See `?Sys.getlocale`
 #' @param raw (logical) Return raw text in the format given by `format`
-#'   parameter. Default: `FALSE`
+#' parameter. Default: `FALSE`
+#' @param url (character) Base URL for the content negotiation request. 
+#' Default: "https://doi.org"
+#' 
 #' @template moreargs
 #' @details See <http://citation.crosscite.org/docs.html> for more info
 #' on the Crossref Content Negotiation API service.
@@ -68,24 +71,17 @@
 #'
 #' # Using DataCite DOIs
 #' ## some formats don't work
-#' # cr_cn("10.5284/1011335", "text")
 #' # cr_cn("10.5284/1011335", "crossref-xml")
 #' # cr_cn("10.5284/1011335", "crossref-tdm")
 #' ## But most do work
+#' cr_cn("10.5284/1011335", "text")
 #' cr_cn("10.5284/1011335", "datacite-xml")
 #' cr_cn("10.5284/1011335", "rdf-xml")
-#' # cr_cn("10.5284/1011335", "turtle")
+#' cr_cn("10.5284/1011335", "turtle")
 #' cr_cn("10.5284/1011335", "citeproc-json-ish")
 #' cr_cn("10.5284/1011335", "ris")
 #' cr_cn("10.5284/1011335", "bibtex")
 #' cr_cn("10.5284/1011335", "bibentry")
-#'
-#' dois <- c('10.5167/UZH-30455','10.5167/UZH-49216','10.5167/UZH-503',
-#'           '10.5167/UZH-38402','10.5167/UZH-41217')
-#' cat(cr_cn(dois[1]))
-#' cat(cr_cn(dois[2]))
-#' cat(cr_cn(dois[3]))
-#' cat(cr_cn(dois[4]))
 #'
 #' # Using Medra DOIs
 #' cr_cn("10.3233/ISU-150780", "onix-xml")
@@ -97,10 +93,21 @@
 #' ## in this case, a DOI minting agency can't be found
 #' ## but we proceed anyway, just assuming it's "crossref"
 #' cr_cn("10.1890/0012-9615(1999)069[0569:EDILSA]2.0.CO;2")
+#' 
+#' # Use a different base url
+#' cr_cn("10.1126/science.169.3946.635", "text", url = "https://data.datacite.org")
+#' cr_cn("10.1126/science.169.3946.635", "text", url = "http://dx.doi.org")
+#' cr_cn("10.1126/science.169.3946.635", "text", "heredity", url = "http://dx.doi.org")
+#' cr_cn("10.5284/1011335", url = "https://citation.crosscite.org/format", 
+#'    style = "oikos")
+#' cr_cn("10.5284/1011335", url = "https://citation.crosscite.org/format", 
+#'    style = "plant-cell-and-environment")
+#' cr_cn("10.5284/1011335", url = "https://data.datacite.org", 
+#'    style = "plant-cell-and-environment")
 #' }
 
 `cr_cn` <- function(dois, format = "bibtex", style = 'apa',
-                    locale = "en-US", raw = FALSE, .progress = "none", ...) {
+  locale = "en-US", raw = FALSE, .progress = "none", url = NULL, ...) {
 
   format <- match.arg(format, c("rdf-xml", "turtle", "citeproc-json",
                                 "citeproc-json-ish", "text", "ris", "bibtex",
@@ -115,7 +122,15 @@
       agency_id <- "crossref"
     }
 
-    url <- paste0("http://data.", agency_id, ".org/", doi)
+    assert(url, "character")
+    if (is.null(url)) url <- "https://doi.org"
+    # need separate setup for citation.crosscite.org vs. others
+    args <- list()
+    if (grepl("citation.crosscite.org", url)) {
+      args <- cr_compact(list(doi = doi, lang = locale, style = style))
+    } else {
+      url <- file.path(url, doi)
+    }
 
     # check cn data provider
     if (!format %in% supported_cn_types[[agency_id]]) {
@@ -141,7 +156,7 @@
     type <- pick[[format]]
     if (format == "citeproc-json") {
       cli <- crul::HttpClient$new(
-        url = file.path("http://api.crossref.org/works", doi, type),
+        url = file.path("https://api.crossref.org/works", doi, type),
         headers = list(
           `User-Agent` = rcrossref_ua(), `X-USER-AGENT` = rcrossref_ua()
         )
@@ -160,7 +175,7 @@
           Accept = type
         )
       )
-      response <- cli$get(...)
+      response <- cli$get(query = args, ...)
     }
     warn_status(response)
     if (response$status_code < 202) {
@@ -220,9 +235,18 @@
 parse_bibtex <- function(x){
   x <- gsub("@[Dd]ata", "@Misc", x)
   writeLines(x, "tmpscratch.bib")
-  output <- read.bib("tmpscratch.bib")
+  out <- bibtex::do_read_bib("tmpscratch.bib", 
+    srcfile = srcfile("tmpscratch.bib"))
   unlink("tmpscratch.bib")
-  output
+  if (length(out) > 0) {
+    out <- out[[1]]
+    atts <- attributes(out)
+    attsuse <- atts[c('key', 'entry')]
+    out <- c(as.list(out), attsuse)
+  } else {
+    out <- list()
+  }
+  return(out)
 }
 
 warn_status <- function(x) {
