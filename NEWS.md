@@ -1,3 +1,27 @@
+rcrossref 0.9.0
+===============
+
+### NEW FEATURES
+
+* big Crossref Addin update (#171) all work by @haozhu233
+* Async HTTP introduced for `cr_works()`, `cr_works_()`, and `cr_citation_count()`. See the new parameter `async` (logical) in those functions. For `cr_citation_count()`, it now accepts more than 1 DOI, and the output has changed from a numeric value to a data.frame (columns: `doi` and `count`). With `async=TRUE` for `cr_works()` you get a list of data.frame's; while for `cr_works_()` you get a list of JSON's (#121) (#160) (#182)
+
+### MINOR IMPROVEMENTS
+
+* package tests now using `vcr` for HTTP request/response caching (#178) (#179)
+* in `works` data, now returning `published-print` and `published-online` fields (#181)
+* add new filters for `/works` routes (when `works = TRUE`): `isbn`, `reference_visibility`, `has_content_domain`, and `has_domain_restriction` (#176) (#177)
+* add new return element in `/works` routes (when `works = TRUE`): `$reference` gives the references cited in the article (these are not the articles citing the target article, sorry) (#176)
+* improve documentation on the "polite pool". If you supply an email address Crossref will put you in the polite pool (#173) (#175) thanks @poldham
+* added example to `cr_abstract()` of handling many DOIs while allowing for failures without stopping progress (#174) thanks @zackbatist
+
+### BUG FIXES
+
+* fix internal parsing of funder data in `cr_works()` (#180) thanks @nicholasmfraser for the bug report
+* fix for `cr_citation_count()`: when given a bad/invalid/malformed DOI, throw warning and give back an `NA` (#164) thanks for the report @chreman
+* Fix for instances in the package where we incorrectly were doing logical comparison's; detected via _R_CHECK_LENGTH_1_LOGIC2_
+
+
 rcrossref 0.8.4
 ===============
 
@@ -15,7 +39,7 @@ rcrossref 0.8.4
 
 ### BUG FIXES
 
-* fixed bug in `cr_works()` in which field queries should have been possible for title and affilitation, but were not. Fixed now.  (#149)
+* fixed bug in `cr_works()` in which field queries should have been possible for title and affiliation, but were not. Fixed now.  (#149)
 * `cr_journals()` was not correctly parsing data when more than 1 ISSN given and `works` set to `TRUE`, fixed now (#156)
 * `cr_journals()` was not correctly parsing data when no ISSN found and `works` set to `TRUE`, fixed now (#150)
 * `cr_journals()` was not correctly handling queries with multiple ISSN's and `works` set to `FALSE`, fixed now (#151)
@@ -101,7 +125,7 @@ surely (#101)
 * sleeping now between tests to avoid making crossref rate
 limit gate keepers mad (#125)
 * `cr_search` and `cr_search_free` are now defunct. They were marked
-deprecated in previous version, and warned of defunctifying, and now
+deprecated in previous version, and warned of defunct, and now
 they are defunct. Similar functionality can be done with e.g., `cr_works()`
 (#102)
 * `crosscite` is now defunct. The functionality of this function can be
@@ -120,7 +144,7 @@ rcrossref 0.5.8
 
 ### NEW FEATURES
 
-* Addded an RStudio Addin for searching for citations. See `?rcrossref` for
+* Added an RStudio Addin for searching for citations. See `?rcrossref` for
 more. Addin authored by Hao Zhu @haozhu233 (#114)
 * New function `cr_abstract()` that tries to get an abstract via XML provided by
 Crossref - NOTE: an abstract is rarely available though (#116)

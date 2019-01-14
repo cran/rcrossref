@@ -17,6 +17,7 @@
 #' category-name, assertion-group. Default: `FALSE`
 #' @param parse (logical) Whether to output json `FALSE` or parse to
 #' list `TRUE`. Default: `FALSE`
+#' @param async (logical) use async HTTP requests. Default: `FALSE`
 #'
 #' @section Beware:
 #' The API will only work for CrossRef DOIs.
@@ -82,6 +83,9 @@
 #' cr_works(query="ecology", sort='relevance', order="asc")
 #' res <- cr_works(query="ecology", sort='score', order="asc")
 #' res$data$score
+#' cr_works(query="ecology", sort='published')
+#' x=cr_works(query="ecology", sort='published-print')
+#' x=cr_works(query="ecology", sort='published-online')
 #'
 #' # Get a random number of results
 #' cr_works(sample=1)
@@ -118,18 +122,41 @@
 #' # select only certain fields to return
 #' res <- cr_works(query = "NSF", select = c('DOI', 'title'))
 #' names(res$data)
+#' 
+#' # asyc
+#' queries <- c("ecology", "science", "cellular", "birds", "European",
+#'   "bears", "beets", "laughter", "hapiness", "funding")
+#' res <- cr_works(query = queries, async = TRUE)
+#' res_json <- cr_works_(query = queries, async = TRUE)
+#' unname(vapply(res_json, class, ""))
+#' jsonlite::fromJSON(res_json[[1]])
+#' 
+#' queries <- c("ecology", "science", "cellular")
+#' res <- cr_works(query = queries, async = TRUE, verbose = TRUE)
+#' res
+#' 
+#' # time
+#' queries <- c("ecology", "science", "cellular", "birds", "European",
+#'   "bears", "beets", "laughter", "hapiness", "funding")
+#' system.time(cr_works(query = queries, async = TRUE))
+#' system.time(lapply(queries, function(z) cr_works(query = z)))
 #' }
 
 `cr_works` <- function(dois = NULL, query = NULL, filter = NULL, offset = NULL,
   limit = NULL, sample = NULL, sort = NULL, order = NULL, facet=FALSE,
   cursor = NULL, cursor_max = 5000, .progress="none", flq = NULL, 
-  select = NULL, ...) {
+  select = NULL, async = FALSE, ...) {
 
   if (cursor_max != as.integer(cursor_max)) {
     stop("cursor_max must be an integer", call. = FALSE)
   }
   args <- prep_args(query, filter, offset, limit, sample, sort, order,
                     facet, cursor, flq, select)
+
+  stopifnot(is.logical(async))
+  if (async) {
+    return(cr_async("works", c(dois, args), ...))
+  }
 
   if (length(dois) > 1) {
     res <- llply(dois, cr_get_cursor, args = args, cursor = cursor,
@@ -167,13 +194,18 @@
 `cr_works_` <- function(dois = NULL, query = NULL, filter = NULL, offset = NULL,
   limit = NULL, sample = NULL, sort = NULL, order = NULL, facet=FALSE,
   cursor = NULL, cursor_max = 5000, .progress="none", parse=FALSE, 
-  flq = NULL, select = NULL, ...) {
+  flq = NULL, select = NULL, async = FALSE, ...) {
 
   if (cursor_max != as.integer(cursor_max)) {
     stop("cursor_max must be an integer", call. = FALSE)
   }
   args <- prep_args(query, filter, offset, limit, sample, sort, order,
                     facet, cursor, flq, select)
+
+  stopifnot(is.logical(async))
+  if (async) {
+    return(cr_async("works", c(dois, args), parse = FALSE, ...))
+  }
 
   if (length(dois) > 1) {
     llply(dois, cr_get_cursor_, args = args, cursor = cursor,
@@ -236,10 +268,12 @@ parse_facets <- function(x){
 
 parse_works <- function(zzz){
   keys <- c('alternative-id','archive','container-title','created',
-            'deposited','DOI','funder','indexed','ISBN','ISSN','issue',
-            'issued','license', 'link','member','page','prefix','publisher',
-            'reference-count','score','source', 'subject','subtitle','title',
-            'type','update-policy','URL','volume','abstract')
+            'deposited','published-print','published-online','DOI',
+            'funder','indexed','ISBN',
+            'ISSN','issue','issued','license', 'link','member','page',
+            'prefix','publisher','reference-count', 'score','source', 
+            'subject','subtitle','title', 'type','update-policy','URL',
+            'volume','abstract')
   manip <- function(which="issued", y) {
     res <- switch(
       which,
@@ -250,6 +284,8 @@ parse_works <- function(zzz){
                                       collapse = ",")),
       created = list(make_date(y[[which]]$`date-parts`)),
       deposited = list(make_date(y[[which]]$`date-parts`)),
+      `published-print` = list(make_date(y[[which]]$`date-parts`)),
+      `published-online` = list(make_date(y[[which]]$`date-parts`)),
       DOI = list(y[[which]]),
       indexed = list(make_date(y[[which]]$`date-parts`)),
       ISBN = list(paste0(unlist(y[[which]]), collapse = ",")),
@@ -302,6 +338,7 @@ parse_works <- function(zzz){
     out_tmp$link <- list(parse_todf(zzz$link)) %||% NULL
     out_tmp$license <- list(tbl_df(bind_rows(lapply(zzz$license, parse_license)))) %||% NULL
     out_tmp$`clinical-trial-number` <- list(parse_todf(zzz$`clinical-trial-number`)) %||% NULL
+    out_tmp$reference <- list(parse_todf(zzz$reference)) %||% NULL
     out_tmp <- Filter(function(x) length(unlist(x)) > 0, out_tmp)
     names(out_tmp) <- tolower(names(out_tmp))
     return(out_tmp)
@@ -344,6 +381,7 @@ parse_todf <- function(x){
           w <- unlist(w, recursive = FALSE)
         }
       }
+      if (length(w) == 0) return(NULL)
       w[sapply(w, function(b) length(b) == 0)] <- NULL
       data.frame(w, stringsAsFactors = FALSE)
     })))

@@ -18,7 +18,7 @@ cr_members_(member_ids = NULL, query = NULL, filter = NULL,
   select = NULL, ...)
 }
 \arguments{
-\item{member_ids}{One or more member ids. See examples. ALternatively,
+\item{member_ids}{One or more member ids. See examples. Alternatively,
 you can query for them using the query parameter.}
 
 \item{query}{Query terms}
@@ -111,6 +111,10 @@ Search CrossRef members
 }
 \details{
 BEWARE: The API will only work for CrossRef DOIs.
+}
+\note{
+See the "Rate limiting" seciton in \link{rcrossref} to get
+into the "fast lane"
 }
 \examples{
 \dontrun{

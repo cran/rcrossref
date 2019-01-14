@@ -237,11 +237,11 @@ hr {
 <pre><code class="r">get_styles()[1:5]
 </code></pre>
 
-<pre><code>#&gt; [1] &quot;academy-of-management-review&quot;                   
-#&gt; [2] &quot;accident-analysis-and-prevention&quot;               
-#&gt; [3] &quot;acm-sig-proceedings-long-author-list&quot;           
-#&gt; [4] &quot;acm-sig-proceedings&quot;                            
-#&gt; [5] &quot;acm-sigchi-proceedings-extended-abstract-format&quot;
+<pre><code>#&gt; [1] &quot;academy-of-management-review&quot;        
+#&gt; [2] &quot;accident-analysis-and-prevention&quot;    
+#&gt; [3] &quot;aci-materials-journal&quot;               
+#&gt; [4] &quot;acm-sig-proceedings-long-author-list&quot;
+#&gt; [5] &quot;acm-sig-proceedings&quot;
 </code></pre>
 
 <p><code>bibtex</code></p>
@@ -276,7 +276,8 @@ hr {
 <pre><code class="r">cr_citation_count(doi=&quot;10.1371/journal.pone.0042793&quot;)
 </code></pre>
 
-<pre><code>#&gt; [1] 21
+<pre><code>#&gt;                            doi count
+#&gt; 1 10.1371/journal.pone.0042793    25
 </code></pre>
 
 <h2>Search Crossref metadata API</h2>
@@ -294,18 +295,18 @@ hr {
 #&gt; 
 #&gt; $data
 #&gt; # A tibble: 10 x 6
-#&gt;    id     location  name          alt.names        uri       tokens       
-#&gt;    &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;         &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;        
-#&gt;  1 50110… Norway    Norsk Sykepl… NSF, Norwegian … http://d… norsk, sykep…
-#&gt;  2 10000… United S… Center for H… CHM, NSF, Unive… http://d… center, for,…
-#&gt;  3 10000… United S… National Sle… NSF              http://d… national, sl…
-#&gt;  4 50110… Sri Lanka National Sci… National Scienc… http://d… national, sc…
-#&gt;  5 10000… Denmark   Statens Natu… Danish National… http://d… statens, nat…
-#&gt;  6 10000… United S… Office of th… NSF Office of t… http://d… office, of, …
-#&gt;  7 50110… Australia National Str… NSF              http://d… national, st…
-#&gt;  8 10000… United S… National Sci… NSF              http://d… national, sc…
-#&gt;  9 50110… China     National Nat… NSFC-Yunnan Joi… http://d… national, na…
-#&gt; 10 50110… China     National Nat… Natural Science… http://d… national, na…
+#&gt;    id     location  name          alt.names        uri       tokens        
+#&gt;    &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;         &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;         
+#&gt;  1 50110… Norway    Norsk Sykepl… NSF, Norwegian … http://d… norsk, sykepl…
+#&gt;  2 10000… United S… Center for H… CHM, NSF, Unive… http://d… center, for, …
+#&gt;  3 10000… United S… National Sle… NSF              http://d… national, sle…
+#&gt;  4 50110… Sri Lanka National Sci… National Scienc… http://d… national, sci…
+#&gt;  5 10000… Denmark   Statens Natu… Danish National… http://d… statens, natu…
+#&gt;  6 10000… United S… Office of th… NSF Office of t… http://d… office, of, t…
+#&gt;  7 50110… Australia National Str… NSF              http://d… national, str…
+#&gt;  8 10000… United S… National Sci… NSF              http://d… national, sci…
+#&gt;  9 50110… China     National Nat… NSFC-Yunnan Joi… http://d… national, nat…
+#&gt; 10 50110… China     National Nat… Natural Science… http://d… national, nat…
 #&gt; 
 #&gt; $facets
 #&gt; NULL
@@ -334,18 +335,19 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1       1614119           NA           0              1
+#&gt; 1       2085016           NA           0              1
 #&gt; 
 #&gt; $data
-#&gt; # A tibble: 1 x 26
-#&gt;   alternative.id container.title created deposited doi   indexed issn 
-#&gt;   &lt;chr&gt;          &lt;chr&gt;           &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;
-#&gt; 1 S200529011400… Journal of Acu… 2014-0… 2017-06-… 10.1… 2018-0… 2005…
-#&gt; # ... with 19 more variables: issue &lt;chr&gt;, issued &lt;chr&gt;, member &lt;chr&gt;,
+#&gt; # A tibble: 1 x 27
+#&gt;   alternative.id container.title created deposited published.print
+#&gt;   &lt;chr&gt;          &lt;chr&gt;           &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;          
+#&gt; 1 BFgim2014129   Genetics in Me… 2014-0… 2017-12-… 2015-06        
+#&gt; # … with 22 more variables: published.online &lt;chr&gt;, doi &lt;chr&gt;,
+#&gt; #   indexed &lt;chr&gt;, issn &lt;chr&gt;, issue &lt;chr&gt;, issued &lt;chr&gt;, member &lt;chr&gt;,
 #&gt; #   page &lt;chr&gt;, prefix &lt;chr&gt;, publisher &lt;chr&gt;, reference.count &lt;chr&gt;,
 #&gt; #   score &lt;chr&gt;, source &lt;chr&gt;, title &lt;chr&gt;, type &lt;chr&gt;,
-#&gt; #   update.policy &lt;chr&gt;, url &lt;chr&gt;, volume &lt;chr&gt;, assertion &lt;list&gt;,
-#&gt; #   author &lt;list&gt;, funder &lt;list&gt;, link &lt;list&gt;, license &lt;list&gt;
+#&gt; #   update.policy &lt;chr&gt;, url &lt;chr&gt;, volume &lt;chr&gt;, author &lt;list&gt;,
+#&gt; #   link &lt;list&gt;, license &lt;list&gt;, reference &lt;list&gt;
 #&gt; 
 #&gt; $facets
 #&gt; NULL
@@ -360,9 +362,9 @@ hr {
 #&gt; # A tibble: 2 x 53
 #&gt;   title publisher issn  last_status_che… deposits_abstra… deposits_orcids…
 #&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;date&gt;           &lt;lgl&gt;            &lt;lgl&gt;           
-#&gt; 1 Jour… &quot;De Gruy… 1805… 2018-08-06       TRUE             FALSE           
-#&gt; 2 Jour… American… 2326… 2018-08-06       FALSE            FALSE           
-#&gt; # ... with 47 more variables: deposits &lt;lgl&gt;,
+#&gt; 1 Jour… &quot;De Gruy… 1805… 2019-01-14       TRUE             FALSE           
+#&gt; 2 Jour… American… 2326… 2019-01-14       FALSE            FALSE           
+#&gt; # … with 47 more variables: deposits &lt;lgl&gt;,
 #&gt; #   deposits_affiliations_backfile &lt;lgl&gt;,
 #&gt; #   deposits_update_policies_backfile &lt;lgl&gt;,
 #&gt; #   deposits_similarity_checking_backfile &lt;lgl&gt;,
@@ -404,23 +406,23 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1            25     elsevier           0             20
+#&gt; 1            31     elsevier           0             20
 #&gt; 
 #&gt; $data
-#&gt; # A tibble: 25 x 2
+#&gt; # A tibble: 31 x 2
 #&gt;    URL                                                      work.count
 #&gt;    &lt;chr&gt;                                                         &lt;int&gt;
 #&gt;  1 http://aspb.org/publications/aspb-journals/open-articles          1
 #&gt;  2 http://creativecommons.org/licenses/by-nc-nd/3.0/                13
-#&gt;  3 http://creativecommons.org/licenses/by-nc-nd/4.0/                 8
-#&gt;  4 http://creativecommons.org/licenses/by-nc/4.0/                    2
-#&gt;  5 http://creativecommons.org/licenses/by/3.0/                       1
-#&gt;  6 http://creativecommons.org/licenses/by/4.0                        2
-#&gt;  7 http://creativecommons.org/licenses/by/4.0/                       2
-#&gt;  8 http://doi.wiley.com/10.1002/tdm_license_1                      157
-#&gt;  9 http://doi.wiley.com/10.1002/tdm_license_1.1                   2175
-#&gt; 10 http://journals.iucr.org/services/copyrightpolicy.html           10
-#&gt; # ... with 15 more rows
+#&gt;  3 http://creativecommons.org/licenses/by-nc-nd/4.0/                 7
+#&gt;  4 http://creativecommons.org/licenses/by-nc/4.0                     1
+#&gt;  5 http://creativecommons.org/licenses/by-nc/4.0/                    2
+#&gt;  6 http://creativecommons.org/licenses/by/3.0/                       1
+#&gt;  7 http://creativecommons.org/licenses/by/4.0                        2
+#&gt;  8 http://creativecommons.org/licenses/by/4.0/                       4
+#&gt;  9 http://doi.wiley.com/10.1002/tdm_license_1                      155
+#&gt; 10 http://doi.wiley.com/10.1002/tdm_license_1.1                   2207
+#&gt; # … with 21 more rows
 </code></pre>
 
 <h3>Search based on DOI prefixes</h3>
@@ -435,7 +437,7 @@ hr {
 #&gt;                               member                             name
 #&gt; 1   http://id.crossref.org/member/78                      Elsevier BV
 #&gt; 2  http://id.crossref.org/member/340 Public Library of Science (PLoS)
-#&gt; 3  http://id.crossref.org/member/297     Springer Nature America, Inc
+#&gt; 3  http://id.crossref.org/member/297                  Springer Nature
 #&gt; 4 http://id.crossref.org/member/1989             Co-Action Publishing
 #&gt; 5  http://id.crossref.org/member/286    Oxford University Press (OUP)
 #&gt;                                  prefix
@@ -456,18 +458,18 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1            18      ecology           0              5
+#&gt; 1            19      ecology           0              5
 #&gt; 
 #&gt; $data
 #&gt; # A tibble: 5 x 56
 #&gt;      id primary_name location last_status_che… total.dois current.dois
 #&gt;   &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;    &lt;date&gt;           &lt;chr&gt;      &lt;chr&gt;       
-#&gt; 1   336 Japanese So… 5-3 Yon… 2018-08-06       1167       157         
-#&gt; 2  1950 Journal of … Suite 8… 2018-08-06       27         0           
-#&gt; 3  2080 The Japan S… 5-3 Yon… 2018-08-06       685        35          
-#&gt; 4  2151 Ecology and… 5-3 Yon… 2018-08-06       385        53          
-#&gt; 5  2169 Italian Soc… Diparti… 2018-08-06       1217       367         
-#&gt; # ... with 50 more variables: backfile.dois &lt;chr&gt;, prefixes &lt;chr&gt;,
+#&gt; 1   336 Japanese So… 5-3 Yon… 2019-01-14       1202       127         
+#&gt; 2  1950 Journal of … Suite 8… 2019-01-14       27         0           
+#&gt; 3  2080 The Japan S… 5-3 Yon… 2019-01-14       688        18          
+#&gt; 4  2151 Ecology and… 5-3 Yon… 2019-01-14       394        50          
+#&gt; 5  2169 Italian Soc… Diparti… 2019-01-14       1261       277         
+#&gt; # … with 50 more variables: backfile.dois &lt;chr&gt;, prefixes &lt;chr&gt;,
 #&gt; #   coverge.affiliations.current &lt;chr&gt;,
 #&gt; #   coverge.similarity.checking.current &lt;chr&gt;,
 #&gt; #   coverge.funders.backfile &lt;chr&gt;, coverge.licenses.backfile &lt;chr&gt;,
@@ -519,16 +521,11 @@ hr {
 <pre><code class="r">cr_r()
 </code></pre>
 
-<pre><code>#&gt;  [1] &quot;10.1016/1359-6454(95)00161-3&quot;              
-#&gt;  [2] &quot;10.1016/s0893-9659(99)00209-8&quot;             
-#&gt;  [3] &quot;10.1007/978-3-319-13449-9_8&quot;               
-#&gt;  [4] &quot;10.7788/daem.1987.43.1.354&quot;                
-#&gt;  [5] &quot;10.1007/978-3-476-05468-5_19&quot;              
-#&gt;  [6] &quot;10.1016/s0026-0657(01)80575-0&quot;             
-#&gt;  [7] &quot;10.2307/259363&quot;                            
-#&gt;  [8] &quot;10.4028/www.scientific.net/amm.519-520.294&quot;
-#&gt;  [9] &quot;10.1111/ajco.12021_1&quot;                      
-#&gt; [10] &quot;10.3384/diss.diva-132634&quot;
+<pre><code>#&gt;  [1] &quot;10.1016/j.ijcard.2010.09.031&quot;    &quot;10.1039/ct9099500138&quot;           
+#&gt;  [3] &quot;10.1055/s-2003-43252&quot;            &quot;10.1016/j.yexmp.2003.11.004&quot;    
+#&gt;  [5] &quot;10.1016/s0734-3299(10)79442-9&quot;   &quot;10.1590/s0102-311x2004000800019&quot;
+#&gt;  [7] &quot;10.1016/0009-2614(82)83542-2&quot;    &quot;10.1016/0022-3697(61)90122-6&quot;   
+#&gt;  [9] &quot;10.1016/j.na.2009.06.013&quot;        &quot;10.1145/800231.807011&quot;
 </code></pre>
 
 <p>You can pass in the number of DOIs you want back (default is 10)</p>
@@ -536,7 +533,7 @@ hr {
 <pre><code class="r">cr_r(2)
 </code></pre>
 
-<pre><code>#&gt; [1] &quot;10.1016/j.ijhydene.2009.12.070&quot; &quot;10.1177/097492840105700301&quot;
+<pre><code>#&gt; [1] &quot;10.1088/0957-0233/3/7/008&quot;   &quot;10.1109/iconip.2002.1198212&quot;
 </code></pre>
 
 </body>

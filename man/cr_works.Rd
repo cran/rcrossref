@@ -8,13 +8,14 @@
 cr_works(dois = NULL, query = NULL, filter = NULL, offset = NULL,
   limit = NULL, sample = NULL, sort = NULL, order = NULL,
   facet = FALSE, cursor = NULL, cursor_max = 5000,
-  .progress = "none", flq = NULL, select = NULL, ...)
+  .progress = "none", flq = NULL, select = NULL, async = FALSE,
+  ...)
 
 cr_works_(dois = NULL, query = NULL, filter = NULL, offset = NULL,
   limit = NULL, sample = NULL, sort = NULL, order = NULL,
   facet = FALSE, cursor = NULL, cursor_max = 5000,
   .progress = "none", parse = FALSE, flq = NULL, select = NULL,
-  ...)
+  async = FALSE, ...)
 }
 \arguments{
 \item{dois}{Search by a single DOI or many DOIs.  Note that using this
@@ -99,6 +100,8 @@ citation lookup. Includes titles, authors, ISSNs and publication years
 \item{select}{(character) One or more field to return (only those fields
 are returned)}
 
+\item{async}{(logical) use async HTTP requests. Default: \code{FALSE}}
+
 \item{...}{Named parameters passed on to \code{\link[crul]{HttpClient}}}
 
 \item{parse}{(logical) Whether to output json \code{FALSE} or parse to
@@ -106,6 +109,10 @@ list \code{TRUE}. Default: \code{FALSE}}
 }
 \description{
 Search CrossRef works (articles)
+}
+\note{
+See the "Rate limiting" seciton in \link{rcrossref} to get
+into the "fast lane"
 }
 \section{Beware}{
 
@@ -175,6 +182,9 @@ cr_works(facet = "license:*", limit=0)
 cr_works(query="ecology", sort='relevance', order="asc")
 res <- cr_works(query="ecology", sort='score', order="asc")
 res$data$score
+cr_works(query="ecology", sort='published')
+x=cr_works(query="ecology", sort='published-print')
+x=cr_works(query="ecology", sort='published-online')
 
 # Get a random number of results
 cr_works(sample=1)
@@ -211,6 +221,24 @@ res <- cr_works(query = "ecology",
 # select only certain fields to return
 res <- cr_works(query = "NSF", select = c('DOI', 'title'))
 names(res$data)
+
+# asyc
+queries <- c("ecology", "science", "cellular", "birds", "European",
+  "bears", "beets", "laughter", "hapiness", "funding")
+res <- cr_works(query = queries, async = TRUE)
+res_json <- cr_works_(query = queries, async = TRUE)
+unname(vapply(res_json, class, ""))
+jsonlite::fromJSON(res_json[[1]])
+
+queries <- c("ecology", "science", "cellular")
+res <- cr_works(query = queries, async = TRUE, verbose = TRUE)
+res
+
+# time
+queries <- c("ecology", "science", "cellular", "birds", "European",
+  "bears", "beets", "laughter", "hapiness", "funding")
+system.time(cr_works(query = queries, async = TRUE))
+system.time(lapply(queries, function(z) cr_works(query = z)))
 }
 }
 \references{
