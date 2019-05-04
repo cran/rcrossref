@@ -295,18 +295,18 @@ hr {
 #&gt; 
 #&gt; $data
 #&gt; # A tibble: 10 x 6
-#&gt;    id     location  name          alt.names        uri       tokens        
-#&gt;    &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;         &lt;chr&gt;            &lt;chr&gt;     &lt;chr&gt;         
-#&gt;  1 50110… Norway    Norsk Sykepl… NSF, Norwegian … http://d… norsk, sykepl…
-#&gt;  2 10000… United S… Center for H… CHM, NSF, Unive… http://d… center, for, …
-#&gt;  3 10000… United S… National Sle… NSF              http://d… national, sle…
-#&gt;  4 50110… Sri Lanka National Sci… National Scienc… http://d… national, sci…
-#&gt;  5 10000… Denmark   Statens Natu… Danish National… http://d… statens, natu…
-#&gt;  6 10000… United S… Office of th… NSF Office of t… http://d… office, of, t…
-#&gt;  7 50110… Australia National Str… NSF              http://d… national, str…
-#&gt;  8 10000… United S… National Sci… NSF              http://d… national, sci…
-#&gt;  9 50110… China     National Nat… NSFC-Yunnan Joi… http://d… national, nat…
-#&gt; 10 50110… China     National Nat… Natural Science… http://d… national, nat…
+#&gt;    id     name          alt.names         uri       tokens         location
+#&gt;    &lt;chr&gt;  &lt;chr&gt;         &lt;chr&gt;             &lt;chr&gt;     &lt;chr&gt;          &lt;chr&gt;   
+#&gt;  1 50110… Norsk Sykepl… NSF, Norwegian N… http://d… norsk, sykepl… &lt;NA&gt;    
+#&gt;  2 10000… Center for H… CHM, NSF, Univer… http://d… center, for, … United …
+#&gt;  3 10000… National Sle… NSF               http://d… national, sle… United …
+#&gt;  4 50110… National Str… NSF               http://d… national, str… &lt;NA&gt;    
+#&gt;  5 10000… Statens Natu… Danish National … http://d… statens, natu… Denmark 
+#&gt;  6 10000… Office of th… NSF Office of th… http://d… office, of, t… United …
+#&gt;  7 50110… National Sci… National Science… http://d… national, sci… &lt;NA&gt;    
+#&gt;  8 10000… National Sci… NSF               http://d… national, sci… United …
+#&gt;  9 50110… National Nat… NSFC-Yunnan Join… http://d… national, nat… China   
+#&gt; 10 50110… National Nat… Natural Science … http://d… national, nat… China   
 #&gt; 
 #&gt; $facets
 #&gt; NULL
@@ -335,19 +335,18 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1       2085016           NA           0              1
+#&gt; 1       2452441           NA           0              1
 #&gt; 
 #&gt; $data
-#&gt; # A tibble: 1 x 27
-#&gt;   alternative.id container.title created deposited published.print
-#&gt;   &lt;chr&gt;          &lt;chr&gt;           &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;          
-#&gt; 1 BFgim2014129   Genetics in Me… 2014-0… 2017-12-… 2015-06        
-#&gt; # … with 22 more variables: published.online &lt;chr&gt;, doi &lt;chr&gt;,
-#&gt; #   indexed &lt;chr&gt;, issn &lt;chr&gt;, issue &lt;chr&gt;, issued &lt;chr&gt;, member &lt;chr&gt;,
+#&gt; # A tibble: 1 x 25
+#&gt;   container.title created deposited published.online doi   indexed issn 
+#&gt;   &lt;chr&gt;           &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;
+#&gt; 1 The Cryosphere  2013-0… 2018-07-… 2013-02-11       10.5… 2019-0… 1994…
+#&gt; # … with 18 more variables: issue &lt;chr&gt;, issued &lt;chr&gt;, member &lt;chr&gt;,
 #&gt; #   page &lt;chr&gt;, prefix &lt;chr&gt;, publisher &lt;chr&gt;, reference.count &lt;chr&gt;,
-#&gt; #   score &lt;chr&gt;, source &lt;chr&gt;, title &lt;chr&gt;, type &lt;chr&gt;,
-#&gt; #   update.policy &lt;chr&gt;, url &lt;chr&gt;, volume &lt;chr&gt;, author &lt;list&gt;,
-#&gt; #   link &lt;list&gt;, license &lt;list&gt;, reference &lt;list&gt;
+#&gt; #   score &lt;chr&gt;, source &lt;chr&gt;, title &lt;chr&gt;, type &lt;chr&gt;, url &lt;chr&gt;,
+#&gt; #   volume &lt;chr&gt;, abstract &lt;chr&gt;, author &lt;list&gt;, link &lt;list&gt;,
+#&gt; #   license &lt;list&gt;, reference &lt;list&gt;
 #&gt; 
 #&gt; $facets
 #&gt; NULL
@@ -362,8 +361,8 @@ hr {
 #&gt; # A tibble: 2 x 53
 #&gt;   title publisher issn  last_status_che… deposits_abstra… deposits_orcids…
 #&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;date&gt;           &lt;lgl&gt;            &lt;lgl&gt;           
-#&gt; 1 Jour… &quot;De Gruy… 1805… 2019-01-14       TRUE             FALSE           
-#&gt; 2 Jour… American… 2326… 2019-01-14       FALSE            FALSE           
+#&gt; 1 Jour… &quot;De Gruy… 1805… 2019-03-24       TRUE             FALSE           
+#&gt; 2 Jour… American… 2326… 2019-03-24       FALSE            FALSE           
 #&gt; # … with 47 more variables: deposits &lt;lgl&gt;,
 #&gt; #   deposits_affiliations_backfile &lt;lgl&gt;,
 #&gt; #   deposits_update_policies_backfile &lt;lgl&gt;,
@@ -406,10 +405,10 @@ hr {
 
 <pre><code>#&gt; $meta
 #&gt;   total_results search_terms start_index items_per_page
-#&gt; 1            31     elsevier           0             20
+#&gt; 1            34     elsevier           0             20
 #&gt; 
 #&gt; $data
-#&gt; # A tibble: 31 x 2
+#&gt; # A tibble: 34 x 2
 #&gt;    URL                                                      work.count
 #&gt;    &lt;chr&gt;                                                         &lt;int&gt;
 #&gt;  1 http://aspb.org/publications/aspb-journals/open-articles          1
@@ -417,12 +416,12 @@ hr {
 #&gt;  3 http://creativecommons.org/licenses/by-nc-nd/4.0/                 7
 #&gt;  4 http://creativecommons.org/licenses/by-nc/4.0                     1
 #&gt;  5 http://creativecommons.org/licenses/by-nc/4.0/                    2
-#&gt;  6 http://creativecommons.org/licenses/by/3.0/                       1
-#&gt;  7 http://creativecommons.org/licenses/by/4.0                        2
-#&gt;  8 http://creativecommons.org/licenses/by/4.0/                       4
-#&gt;  9 http://doi.wiley.com/10.1002/tdm_license_1                      155
-#&gt; 10 http://doi.wiley.com/10.1002/tdm_license_1.1                   2207
-#&gt; # … with 21 more rows
+#&gt;  6 http://creativecommons.org/licenses/by/2.0                        1
+#&gt;  7 http://creativecommons.org/licenses/by/3.0/                       1
+#&gt;  8 http://creativecommons.org/licenses/by/4.0                        3
+#&gt;  9 http://creativecommons.org/licenses/by/4.0/                       6
+#&gt; 10 http://doi.wiley.com/10.1002/tdm_license_1                      155
+#&gt; # … with 24 more rows
 </code></pre>
 
 <h3>Search based on DOI prefixes</h3>
@@ -464,11 +463,11 @@ hr {
 #&gt; # A tibble: 5 x 56
 #&gt;      id primary_name location last_status_che… total.dois current.dois
 #&gt;   &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;    &lt;date&gt;           &lt;chr&gt;      &lt;chr&gt;       
-#&gt; 1   336 Japanese So… 5-3 Yon… 2019-01-14       1202       127         
-#&gt; 2  1950 Journal of … Suite 8… 2019-01-14       27         0           
-#&gt; 3  2080 The Japan S… 5-3 Yon… 2019-01-14       688        18          
-#&gt; 4  2151 Ecology and… 5-3 Yon… 2019-01-14       394        50          
-#&gt; 5  2169 Italian Soc… Diparti… 2019-01-14       1261       277         
+#&gt; 1   336 Japanese So… 5-3 Yon… 2019-04-16       1220       145         
+#&gt; 2  1950 Journal of … Suite 8… 2019-04-16       27         0           
+#&gt; 3  2080 The Japan S… 5-3 Yon… 2019-04-16       691        21          
+#&gt; 4  2151 Ecology and… 5-3 Yon… 2019-04-16       404        60          
+#&gt; 5  2169 Italian Soc… Diparti… 2019-04-16       1286       302         
 #&gt; # … with 50 more variables: backfile.dois &lt;chr&gt;, prefixes &lt;chr&gt;,
 #&gt; #   coverge.affiliations.current &lt;chr&gt;,
 #&gt; #   coverge.similarity.checking.current &lt;chr&gt;,
@@ -521,11 +520,16 @@ hr {
 <pre><code class="r">cr_r()
 </code></pre>
 
-<pre><code>#&gt;  [1] &quot;10.1016/j.ijcard.2010.09.031&quot;    &quot;10.1039/ct9099500138&quot;           
-#&gt;  [3] &quot;10.1055/s-2003-43252&quot;            &quot;10.1016/j.yexmp.2003.11.004&quot;    
-#&gt;  [5] &quot;10.1016/s0734-3299(10)79442-9&quot;   &quot;10.1590/s0102-311x2004000800019&quot;
-#&gt;  [7] &quot;10.1016/0009-2614(82)83542-2&quot;    &quot;10.1016/0022-3697(61)90122-6&quot;   
-#&gt;  [9] &quot;10.1016/j.na.2009.06.013&quot;        &quot;10.1145/800231.807011&quot;
+<pre><code>#&gt;  [1] &quot;10.2174/187221207782411584&quot;        
+#&gt;  [2] &quot;10.1016/b978-0-08-202565-8.50005-5&quot;
+#&gt;  [3] &quot;10.1016/0003-9861(72)90232-9&quot;      
+#&gt;  [4] &quot;10.1093/nq/s4-v.130.607h&quot;          
+#&gt;  [5] &quot;10.1109/epepemc.2012.6397467&quot;      
+#&gt;  [6] &quot;10.1016/j.psychsport.2013.02.004&quot;  
+#&gt;  [7] &quot;10.7247/jtomc.2014.1695&quot;           
+#&gt;  [8] &quot;10.1109/sensor.1995.721776&quot;        
+#&gt;  [9] &quot;10.1080/00268977100100441&quot;         
+#&gt; [10] &quot;10.1002/jcp.24935&quot;
 </code></pre>
 
 <p>You can pass in the number of DOIs you want back (default is 10)</p>
@@ -533,7 +537,7 @@ hr {
 <pre><code class="r">cr_r(2)
 </code></pre>
 
-<pre><code>#&gt; [1] &quot;10.1088/0957-0233/3/7/008&quot;   &quot;10.1109/iconip.2002.1198212&quot;
+<pre><code>#&gt; [1] &quot;10.1007/s10708-010-9338-x&quot;   &quot;10.1007/978-94-007-0354-4_1&quot;
 </code></pre>
 
 </body>
