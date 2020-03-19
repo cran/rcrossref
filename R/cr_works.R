@@ -118,9 +118,9 @@
 #' res <- cr_works(query = "ecology",
 #'   flq = c(`query.container-title` = 'Ecology'))
 #'
-#' ## query.author and query.title
+#' ## query.author and query.bibliographic
 #' res <- cr_works(query = "ecology",
-#'   flq = c(query.author = 'Smith', query.title = 'cell'))
+#'   flq = c(query.author = 'Smith', query.bibliographic = 'cell'))
 #'
 #' # select only certain fields to return
 #' res <- cr_works(query = "NSF", select = c('DOI', 'title'))
@@ -224,8 +224,8 @@ cr_get_cursor <- function(x, args, cursor, cursor_max, .progress, ...) {
   path <- if (!is.null(x)) sprintf("works/%s", x) else "works"
   if (!is.null(cursor)) {
     rr <- Requestor$new(path = path, args = args, cursor_max = cursor_max,
-                        should_parse = TRUE, .progress = .progress, ...)
-    rr$GETcursor()
+                        should_parse = TRUE, .progress = .progress)
+    rr$GETcursor(...)
     rr$parse()
   } else {
     cr_GET(endpoint = path, args, todf = FALSE, ...)
@@ -236,8 +236,8 @@ cr_get_cursor_ <- function(x, args, cursor, cursor_max, parse, .progress, ...) {
   path <- if (!is.null(x)) sprintf("works/%s", x) else "works"
   if (!is.null(cursor)) {
     rr <- Requestor$new(path = path, args = args, cursor_max = cursor_max,
-                        should_parse = parse, .progress = .progress, ...)
-    rr$GETcursor()
+                        should_parse = parse, .progress = .progress)
+    rr$GETcursor(...)
     rr$cursor_out
   } else {
     cr_GET(endpoint = path, args, todf = FALSE, parse = parse, ...)

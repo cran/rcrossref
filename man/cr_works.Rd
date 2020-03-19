@@ -5,17 +5,44 @@
 \alias{cr_works_}
 \title{Search CrossRef works (articles)}
 \usage{
-cr_works(dois = NULL, query = NULL, filter = NULL, offset = NULL,
-  limit = NULL, sample = NULL, sort = NULL, order = NULL,
-  facet = FALSE, cursor = NULL, cursor_max = 5000,
-  .progress = "none", flq = NULL, select = NULL, async = FALSE,
-  ...)
+cr_works(
+  dois = NULL,
+  query = NULL,
+  filter = NULL,
+  offset = NULL,
+  limit = NULL,
+  sample = NULL,
+  sort = NULL,
+  order = NULL,
+  facet = FALSE,
+  cursor = NULL,
+  cursor_max = 5000,
+  .progress = "none",
+  flq = NULL,
+  select = NULL,
+  async = FALSE,
+  ...
+)
 
-cr_works_(dois = NULL, query = NULL, filter = NULL, offset = NULL,
-  limit = NULL, sample = NULL, sort = NULL, order = NULL,
-  facet = FALSE, cursor = NULL, cursor_max = 5000,
-  .progress = "none", parse = FALSE, flq = NULL, select = NULL,
-  async = FALSE, ...)
+cr_works_(
+  dois = NULL,
+  query = NULL,
+  filter = NULL,
+  offset = NULL,
+  limit = NULL,
+  sample = NULL,
+  sort = NULL,
+  order = NULL,
+  facet = FALSE,
+  cursor = NULL,
+  cursor_max = 5000,
+  .progress = "none",
+  parse = FALSE,
+  flq = NULL,
+  select = NULL,
+  async = FALSE,
+  ...
+)
 }
 \arguments{
 \item{dois}{Search by a single DOI or many DOIs.  Note that using this
@@ -65,16 +92,19 @@ funder-doi, orcid, container-title, assertion, archive, update-type,
 issn, published, source, type-name, publisher-name, license,
 category-name, assertion-group. Default: \code{FALSE}}
 
-\item{cursor}{(character) Cursor character string to do deep paging. Default is None.
-Pass in '*' to start deep paging. Any combination of query, filters and facets may be
-used with deep paging cursors. While rows may be specified along with cursor, offset
-and sample cannot be used.
-See https://github.com/CrossRef/rest-api-doc/blob/master/rest_api.md#deep-paging-with-cursors}
+\item{cursor}{(character) Cursor character string to do deep paging.
+Default is None. Pass in '*' to start deep paging. Any combination of
+query, filters and facets may be used with deep paging cursors.
+While the \code{limit} parameter may be specified along with cursor,
+offset and sample cannot be used with the cursor. See
+https://github.com/CrossRef/rest-api-doc#deep-paging-with-cursors}
 
-\item{cursor_max}{(integer) Max records to retrieve. Only used when cursor param used.
-Because deep paging can result in continuous requests until all are retrieved, use this
-parameter to set a maximum number of records. Of course, if there are less records
-found than this value, you will get only those found.}
+\item{cursor_max}{(integer) Max records to retrieve. Only used when
+cursor param used. Because deep paging can result in continuous requests
+until all are retrieved, use this parameter to set a maximum number of
+records. Of course, if there are less records found than this value,
+you will get only those found. When cursor pagination is being used
+the \code{limit} parameter sets the chunk size per request.}
 
 \item{.progress}{Show a \code{plyr}-style progress bar? Options are "none", "text",
 "tk", "win", and "time".  See \code{\link[plyr]{create_progress_bar}} for details
@@ -86,25 +116,28 @@ non-boolean is coerced to \code{FALSE}.}
 \item{flq}{field queries. One or more field queries. Acceptable set of
 field query parameters are:
 \itemize{
-\item \code{query.title} - Query title and subtitle
-\item \code{query.container-title}    - Query container-title aka. publication name
+\item \code{query.container-title}    - Query container-title aka.
+publication name
 \item \code{query.author} - Query author first and given names
 \item \code{query.editor} - Query editor first and given names
 \item \code{query.chair}    - Query chair first and given names
 \item \code{query.translator} - Query translator first and given names
-\item \code{query.contributor} - Query author, editor, chair and translator
-first and given names
-\item \code{query.bibliographic} - Query bibliographic information, useful for
-citation lookup. Includes titles, authors, ISSNs and publication years
+\item \code{query.contributor} - Query author, editor, chair and
+translator first and given names
+\item \code{query.bibliographic} - Query bibliographic information, useful
+for citation lookup. Includes titles, authors, ISSNs and publication years
 \item \code{query.affiliation} - Query contributor affiliations
-}}
+}
+
+Note: \code{query.title} has been removed - use \code{query.bibliographic}
+as a replacement}
 
 \item{select}{(character) One or more field to return (only those fields
 are returned)}
 
 \item{async}{(logical) use async HTTP requests. Default: \code{FALSE}}
 
-\item{...}{Named parameters passed on to \code{\link[crul]{HttpClient}}}
+\item{...}{Named parameters passed on to \code{\link[crul]{verb-GET}}}
 
 \item{parse}{(logical) Whether to output json \code{FALSE} or parse to
 list \code{TRUE}. Default: \code{FALSE}}
@@ -116,6 +149,18 @@ Search CrossRef works (articles)
 See the "Rate limiting" seciton in \link{rcrossref} to get
 into the "fast lane"
 }
+\section{Deep paging (using the cursor)}{
+
+When using the cursor, a character string called \code{next-cursor} is
+returned from Crossref that we use to do the next request, and so on. We
+use a while loop to get number of results up to the value of
+\code{cursor_max}. Since we are doing each request for you, you may not
+need the \code{next-cursor} string, but if you do want it, you can get
+to it by indexing into the result like \code{x$meta$next_cursor}
+
+Note that you can pass in curl options when using cursor, via \code{"..."}
+}
+
 \section{Beware}{
 
 The API will only work for CrossRef DOIs.
@@ -219,9 +264,9 @@ res <- cr_works(query = "ecology", flq = c(query.author = 'Boettiger'))
 res <- cr_works(query = "ecology",
   flq = c(`query.container-title` = 'Ecology'))
 
-## query.author and query.title
+## query.author and query.bibliographic
 res <- cr_works(query = "ecology",
-  flq = c(query.author = 'Smith', query.title = 'cell'))
+  flq = c(query.author = 'Smith', query.bibliographic = 'cell'))
 
 # select only certain fields to return
 res <- cr_works(query = "NSF", select = c('DOI', 'title'))
@@ -250,9 +295,12 @@ system.time(lapply(queries, function(z) cr_works(query = z)))
 \url{https://github.com/CrossRef/rest-api-doc/blob/master/rest_api.md}
 }
 \seealso{
-Other crossref: \code{\link{cr_funders}},
-  \code{\link{cr_journals}}, \code{\link{cr_licenses}},
-  \code{\link{cr_members}}, \code{\link{cr_prefixes}},
-  \code{\link{cr_types}}
+Other crossref: 
+\code{\link{cr_funders}()},
+\code{\link{cr_journals}()},
+\code{\link{cr_licenses}()},
+\code{\link{cr_members}()},
+\code{\link{cr_prefixes}()},
+\code{\link{cr_types}()}
 }
 \concept{crossref}
