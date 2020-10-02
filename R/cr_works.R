@@ -39,7 +39,7 @@
 #' }
 #'
 #' @references
-#' <https://github.com/CrossRef/rest-api-doc/blob/master/rest_api.md>
+#' https://github.com/CrossRef/rest-api-doc
 #'
 #' @examples \dontrun{
 #' # Works funded by the NSF
@@ -166,7 +166,7 @@ cr_works <- function(dois = NULL, query = NULL, filter = NULL, offset = NULL,
                  cursor_max = cursor_max, .progress = .progress, ...)
     res <- lapply(res, "[[", "message")
     res <- lapply(res, parse_works)
-    df <- tbl_df(bind_rows(res))
+    df <- tibble::as_tibble(bind_rows(res))
     #exclude rows with empty DOI value until CrossRef API supports
     #input validation
     if (nrow(df[df$doi == "", ]) > 0) {
@@ -183,11 +183,11 @@ cr_works <- function(dois = NULL, query = NULL, filter = NULL, offset = NULL,
       } else {
         meta <- parse_meta(tmp)
         list(meta = meta,
-             data = tbl_df(bind_rows(lapply(tmp$message$items, parse_works))),
+             data = tibble::as_tibble(bind_rows(lapply(tmp$message$items, parse_works))),
              facets = parse_facets(tmp$message$facets))
       }
     } else {
-      list(meta = NULL, data = tbl_df(parse_works(tmp$message)), facets = NULL)
+      list(meta = NULL, data = tibble::as_tibble(parse_works(tmp$message)), facets = NULL)
     }
   }
 }
@@ -275,9 +275,10 @@ parse_works <- function(zzz){
             'deposited','published-print','published-online','DOI',
             'funder','indexed','ISBN',
             'ISSN','issue','issued','license', 'link','member','page',
-            'prefix','publisher','reference-count', 'score','source',
+            'prefix','publisher', 'score','source',
+            'reference-count', 'references-count', 'is-referenced-by-count',
             'subject','subtitle','title', 'type','update-policy','URL',
-            'volume','abstract')
+            'volume','abstract', 'language', 'short-container-title')
   manip <- function(which="issued", y) {
     res <- switch(
       which,
@@ -285,6 +286,8 @@ parse_works <- function(zzz){
                                      collapse = ",")),
       `archive` = list(y[[which]]),
       `container-title` = list(paste0(unlist(y[[which]]),
+                                      collapse = ",")),
+      `short-container-title` = list(paste0(unlist(y[[which]]),
                                       collapse = ",")),
       created = list(make_date(y[[which]]$`date-parts`)),
       deposited = list(make_date(y[[which]]$`date-parts`)),
@@ -305,6 +308,9 @@ parse_works <- function(zzz){
       prefix = list(y[[which]]),
       publisher = list(y[[which]]),
       `reference-count` = list(y[[which]]),
+      `references-count` = list(y[[which]]),
+      `is-referenced-by-count` = list(y[[which]]),
+      `language` = list(y[[which]]),
       score = list(y[[which]]),
       source = list(y[[which]]),
       subject = list(paste0(unlist(y[[which]]), collapse = ",")),
@@ -340,7 +346,13 @@ parse_works <- function(zzz){
     out_tmp$author <- list(parse_todf(zzz$author)) %||% NULL
     out_tmp$funder <- list(parse_todf(zzz$funder)) %||% NULL
     out_tmp$link <- list(parse_todf(zzz$link)) %||% NULL
-    out_tmp$license <- list(tbl_df(bind_rows(lapply(zzz$license, parse_license)))) %||% NULL
+    if (!is.null(zzz$`content-domain`)) {
+      out_tmp$content_domain <- list(
+        data.frame(domain=paste0(unlist(zzz$`content-domain`$domain), collapse=","), 
+          crossmark_restriction=unlist(zzz$`content-domain`$`crossmark-restriction`))) %||% NULL
+    }
+    out_tmp$update_to <- list(tibble::as_tibble(bind_rows(lapply(zzz$`update-to`, parse_update_to)))) %||% NULL
+    out_tmp$license <- list(tibble::as_tibble(bind_rows(lapply(zzz$license, parse_license)))) %||% NULL
     out_tmp$`clinical-trial-number` <- list(parse_todf(zzz$`clinical-trial-number`)) %||% NULL
     out_tmp$reference <- list(parse_todf(zzz$reference)) %||% NULL
     out_tmp <- Filter(function(x) length(unlist(x)) > 0, out_tmp)
@@ -366,6 +378,16 @@ parse_license <- function(x){
   }
 }
 
+parse_update_to <- function(x){
+  if (is.null(x)) {
+    NULL
+  } else {
+    date <- make_date(x$updated$`date-parts`)
+    data.frame(date = date, x[!names(x) == "updated"],
+               stringsAsFactors = FALSE)
+  }
+}
+
 parse_ctn <- function(x){
   if (is.null(x)) {
     NULL
@@ -378,7 +400,7 @@ parse_todf <- function(x){
   if (is.null(x)) {
     NULL
   } else {
-    tbl_df(bind_rows(lapply(x, function(w) {
+    tibble::as_tibble(bind_rows(lapply(x, function(w) {
       if ("list" %in% vapply(w, class, "")) {
         w <- unlist(w, recursive = FALSE)
         if ("list" %in% vapply(w, class, "")) {

@@ -17,7 +17,7 @@
 #'
 #' @details BEWARE: The API will only work for CrossRef DOIs.
 #' @references
-#' <https://github.com/CrossRef/rest-api-doc/blob/master/rest_api.md>
+#' https://github.com/CrossRef/rest-api-doc
 #' @details NOTE: The API route behind this function does not support filters
 #' any more, so the `filter` parameter has been removed.
 #'
@@ -44,7 +44,7 @@
                           sort = sort, order = order))
 
   tmp <- licenses_GET(args = args, parse = TRUE, ...)
-  df <- tbl_df(bind_rows(lapply(tmp$message$items, data.frame,
+  df <- tibble::as_tibble(bind_rows(lapply(tmp$message$items, data.frame,
                                 stringsAsFactors = FALSE)))
   meta <- parse_meta(tmp)
   list(meta = meta, data = df)
