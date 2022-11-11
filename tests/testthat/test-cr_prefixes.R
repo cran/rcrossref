@@ -13,10 +13,10 @@ test_that("cr_prefixes returns correct class", {
 test_that("cr_prefixes paging works correctly", {
   vcr::use_cassette("cr_prefixes_pagination", {
     expect_equal(NROW(
-      cr_prefixes(prefixes="10.1016", works = TRUE, 
+      cr_prefixes(prefixes="10.1016", works = TRUE,
                   filter=c(has_full_text=TRUE),
                   limit=5)$data
-      ), 
+      ),
       5
     )
     expect_equal(NCOL(cr_prefixes(prefixes="10.1016", works = TRUE,
@@ -35,13 +35,12 @@ test_that("cr_prefixes metadata works correctly", {
 test_that("cr_prefixes facet works correctly", {
   vcr::use_cassette("cr_prefixes_faceting", {
 
-    aa <- cr_prefixes(prefixes="10.1016", works=TRUE, facet=TRUE, limit = 10)
+    aa <- cr_prefixes(prefixes="10.17875", works=TRUE, facet= "container-title:*", limit = 10)
 
     expect_is(aa, "list")
     expect_named(aa, c('meta', 'data', 'facets'))
     expect_is(aa$facets, 'list')
-    expect_is(aa$facets$affiliation, 'data.frame')
-    expect_is(aa$facets$orcid, 'data.frame')
+    expect_is(aa$facets$`container-title`, 'data.frame')
   })
 })
 
@@ -53,8 +52,8 @@ test_that("cr_prefixes fails correctly", {
 
     # prefix not found
     expect_warning(
-      cr_prefixes_(prefixes = c("10.1038", "10.1684", "10.1109")),
-      "/prefixes/10.1684 - Resource not found."
+      cr_prefixes_(prefixes = c("10.1038", "10.1684", "10.11090")),
+      "/prefixes/10.11090 - Resource not found."
     )
   })
 })

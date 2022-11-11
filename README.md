@@ -5,8 +5,8 @@ rcrossref: R interface to CrossRef APIs
 
 [![cran checks](https://cranchecks.info/badges/worst/rcrossref)](https://cranchecks.info/pkgs/rcrossref)
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![R-check](https://github.com/ropensci/rcrossref/workflows/R-check/badge.svg)](https://github.com/ropensci/rcrossref/actions/)
-[![codecov](https://codecov.io/gh/ropensci/rcrossref/branch/master/graph/badge.svg)](https://codecov.io/gh/ropensci/rcrossref)
+[![R-check](https://github.com/ropensci/rcrossref/actions/workflows/R-check.yml/badge.svg)](https://github.com/ropensci/rcrossref/actions/workflows/R-check.yml)
+[![codecov](https://codecov.io/gh/ropensci/rcrossref/branch/master/graph/badge.svg)](https://app.codecov.io/gh/ropensci/rcrossref)
 [![rstudio mirror downloads](https://cranlogs.r-pkg.org/badges/rcrossref)](https://github.com/r-hub/cranlogs.app)
 [![cran version](https://www.r-pkg.org/badges/version/rcrossref)](https://cran.r-project.org/package=rcrossref)
 
@@ -71,5 +71,3 @@ See https://docs.ropensci.org/rcrossref/ to get started
 This package is part of a richer suite called fulltext (https://github.com/ropensci/fulltext), along with several other packages, that provides the ability to search for and retrieve full text of open access scholarly articles.
 
 ---
-
-[![rofooter](https://ropensci.org/public_images/github_footer.png)](https://ropensci.org)

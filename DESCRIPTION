@@ -5,14 +5,14 @@ Description: Client for various 'CrossRef' 'APIs', including 'metadata' search
     (including 'bibtex', 'citeproc-json', 'rdf-xml', etc.), convert 'DOIs'
     to 'PMIDs', and 'vice versa', get citations for 'DOIs', and get links to
     full text of articles when available.
-Version: 1.1.0
+Version: 1.2.0
 License: MIT + file LICENSE
 Authors@R: c(
-    person("Scott", "Chamberlain", role = c("aut", "cre"), 
-        email = "myrmecocystus@gmail.com", 
-        comment = c(ORCID = "0000-0003-1444-9135")),
+    person("Scott", "Chamberlain", role = "aut"),
     person("Hao", "Zhu", role = "aut"),
-    person("Najko", "Jahn", role = "aut"),
+    person("Najko", "Jahn", role = c("aut", "cre"),
+        email = "najko.jahn@gmail.com",
+        comment = c(ORCID = "0000-0001-5105-1463")),
     person("Carl", "Boettiger", role = "aut"),
     person("Karthik", "Ram", role = "aut")
     )
@@ -25,19 +25,19 @@ Imports: methods, utils, jsonlite (>= 1.5), crul (>= 0.7.4), xml2 (>=
         1.1.1), plyr, dplyr (>= 0.7.4), tibble, R6, shiny, miniUI,
         stringr, DT, stats
 Suggests: roxygen2 (>= 7.1.0), testthat, knitr, rmarkdown, vcr (>=
-        0.2.6), bibtex
-RoxygenNote: 7.1.1
+        0.2.6), bibtex, withr
+RoxygenNote: 7.2.0
 X-schema.org-applicationCategory: Literature
 X-schema.org-keywords: text-ming, literature, pdf, xml, publications,
         citations, full-text, TDM, Crossref
 X-schema.org-isPartOf: https://ropensci.org
 NeedsCompilation: no
-Packaged: 2020-10-02 16:06:47 UTC; sckott
-Author: Scott Chamberlain [aut, cre] (<https://orcid.org/0000-0003-1444-9135>),
+Packaged: 2022-11-10 18:25:43 UTC; najkojahn
+Author: Scott Chamberlain [aut],
   Hao Zhu [aut],
-  Najko Jahn [aut],
+  Najko Jahn [aut, cre] (<https://orcid.org/0000-0001-5105-1463>),
   Carl Boettiger [aut],
   Karthik Ram [aut]
-Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
+Maintainer: Najko Jahn <najko.jahn@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-10-02 21:50:02 UTC
+Date/Publication: 2022-11-11 18:20:02 UTC

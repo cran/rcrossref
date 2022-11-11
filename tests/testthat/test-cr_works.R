@@ -8,9 +8,9 @@ test_that("cr_works returns", {
     c <- cr_works(query="global state", filter=c(has_orcid=TRUE), limit=3)
     d <- cr_works(filter=c(has_full_text = TRUE))
     e <- cr_works(dois=c('10.1007/12080.1874-1746','10.1007/10452.1573-5125', '10.1111/(issn)1442-9993'))
-    f <- cr_works(query="NSF", facet=TRUE, limit=0)
+    f <- cr_works(query="lagotto", facet=TRUE, limit=0)
     g <- cr_works(sample=1)
-    h <- cr_works(query="NSF", facet=TRUE)
+   # h <- cr_works(query="lagotto", facet=TRUE)
     i <- suppressWarnings(cr_works(dois=c('blblbl', '10.1038/nnano.2014.279')))
 
     # correct class
@@ -21,7 +21,7 @@ test_that("cr_works returns", {
     expect_is(e, "list")
     expect_is(f, "list")
     expect_is(g, "list")
-    expect_is(h, "list")
+   # expect_is(h, "list")
     expect_is(i, "list")
 
     expect_is(a$meta, "data.frame")
@@ -30,11 +30,11 @@ test_that("cr_works returns", {
     expect_is(a$data$url, "character")
     expect_equal(a$facets, NULL)
 
-    expect_is(h, "list")
-    expect_is(h$meta, "data.frame")
-    expect_is(h$facets, "list")
-    expect_is(h$facets$license, "data.frame")
-    expect_is(h$facets$license$.id, "character")
+    expect_is(f, "list")
+    expect_is(f$meta, "data.frame")
+    expect_is(f$facets, "list")
+    expect_is(f$facets$license, "data.frame")
+    expect_is(f$facets$license$.id, "character")
 
     expect_equal(i$meta, NULL)
     expect_equal(i$facets, NULL)
@@ -48,7 +48,7 @@ test_that("cr_works returns", {
     expect_equal(length(e), 3)
     expect_equal(length(f), 3)
     expect_equal(length(g), 3)
-    expect_equal(length(h), 3)
+   # expect_equal(length(h), 3)
     expect_equal(length(i), 3)
 
   })
@@ -118,13 +118,15 @@ test_that("cr_works - parses funders correctly", {
     dd <- cr_works(doi)
     expect_true(any(grepl("funder", names(dd$data))))
     expect_named(dd$data$funder[[1]],
-                 c("DOI", "name", "doi.asserted.by", "award"))
+                 c("DOI", "name", "doi.asserted.by", "award"),
+                 ignore.order = TRUE)
 
     doi <- "10.1145/2834800.2834802"
     dd <- cr_works(doi)
     expect_true(any(grepl("funder", names(dd$data))))
     expect_named(dd$data$funder[[1]],
-                 c("DOI", "name", "doi.asserted.by", "award"))
+                 c("DOI", "name", "doi.asserted.by", "award"),
+                 ignore.order = TRUE)
 
     doi <- "10.1145/2832099.2832103"
     ee <- cr_works(doi)
@@ -148,7 +150,8 @@ test_that("cr_works - parses funders correctly", {
     expect_true(any(grepl("funder", names(hh$data))))
     expect_named(
       hh$data$funder[[1]],
-      c("DOI", "name", "doi.asserted.by", "award1", "award2", "award3"))
+      c("DOI", "name", "doi.asserted.by", "award", "award1", "award2"),
+      ignore.order = TRUE)
   })
 })
 
@@ -172,24 +175,26 @@ test_that("cr_works - select works", {
 
 test_that("cr_works - email works", {
   vcr::use_cassette("cr_works_email_works", {
-    Sys.setenv("crossref_email" = "name@example.com")
-    a <- cr_works(query="NSF")
-    expect_is(a, "list")
+     withr::with_envvar(
+      new = c("crossref_email" = "name@example.com"),
+      expect_is(cr_works(query = "NSF"), "list")
+      )
   })
 })
 
 test_that("cr_works - email is validated", {
-  vcr::use_cassette("cr_works_email_is_validated", {  
-    Sys.setenv("crossref_email" = "name@example")
-    expect_error(cr_works(query="NSF"))
-  })
+    withr::with_envvar(
+      new = c("crossref_email" = "name@example"),
+      expect_error(cr_works(query = "NSF"))
+    )
 })
 
 test_that("cr_works - email NULL works", {
   vcr::use_cassette("cr_works_email_null_works", {
-    Sys.setenv("crossref_email" = "")
-    a <- cr_works(query="NSF")
-    expect_is(a, "list")
+     withr::with_envvar(
+      new = c("crossref_email" = ""),
+      expect_is(cr_works(query = "NSF"), "list")
+     )
   })
 })
 
@@ -227,4 +232,12 @@ test_that("cr_works fails well: arguments that dont require http requests", {
   expect_error(cr_works(sample = 'foo'), "sample value illegal")
   
   expect_error(cr_works(async = 5), "is not TRUE")
+})
+
+# see https://github.com/ropensci/rcrossref/issues/211
+test_that("content domain parsing fix", {
+  # this DOI caused a failure in parsing content domain
+  vcr::use_cassette("cr_works_no_content_domain_fail", {
+    expect_is(cr_works(dois = "10.7287/peerj.3819v0.1/reviews/2"), "list")
+  })
 })

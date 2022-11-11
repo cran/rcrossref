@@ -25,25 +25,22 @@ test_that("cr_journals metadata works correctly", {
 })
 
 test_that("cr_journals fails correctly", {
-  vcr::use_cassette("cr_journals_fails_well", {
-
     expect_error(cr_journals(query="peerj", limit=4, timeout_ms = 1))
-  })
 })
 
-test_that("cr_journals facet works", {
-  vcr::use_cassette("cr_journals_faceting", {
+# test_that("cr_journals facet works", {
+#   vcr::use_cassette("cr_journals_faceting", {
   
-    a <- cr_journals('1803-2427', works=TRUE, facet=TRUE, limit = 0)
+#     a <- cr_journals('1803-2427', works=TRUE, facet=TRUE, limit = 0)
     
-    expect_is(a, "list")
-    expect_is(a$data, "data.frame")
-    expect_null(a$meta)
-    expect_is(a$facets, "list")
-    expect_is(a$facets$affiliation, "data.frame")
-    expect_is(a$facets$published, "data.frame")
-  })
-})
+#     expect_is(a, "list")
+#     expect_is(a$data, "data.frame")
+#     expect_null(a$meta)
+#     expect_is(a$facets, "list")
+#     expect_is(a$facets$affiliation, "data.frame")
+#     expect_is(a$facets$published, "data.frame")
+#   })
+# })
 
 
 test_that("cr_journals warns correctly", {
